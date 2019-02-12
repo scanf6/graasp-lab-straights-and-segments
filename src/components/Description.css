@@ -49,3 +49,10 @@
   margin-top: 2rem;
   width: 70%;
 }
+.explanation-component {
+  color: #555;
+  font-size: 1.1rem;
+  padding: 0 1rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
