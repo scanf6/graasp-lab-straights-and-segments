@@ -1,9 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 
 const Resume = ({
   t,
+  handleToggleLine,
+  handleToggleSegment,
+  handleToggleSemiLine,
+  showLine,
+  showSegment,
+  showSemiLine,
 }) => (
   <div className="resume-container">
     <div className="description-content">
@@ -17,7 +24,8 @@ const Resume = ({
       <Button
         outline
         color="secondary"
-        className="use-case"
+        className={`${showLine ? 'line-activated' : ''} use-case`}
+        onClick={handleToggleLine}
       >
         {t('Line')}
       </Button>
@@ -25,7 +33,8 @@ const Resume = ({
       <Button
         outline
         color="secondary"
-        className="use-case semi-line"
+        className={`${showSemiLine ? 'semi-line-activated' : ''} use-case semi-line`}
+        onClick={handleToggleSemiLine}
       >
         {t('Semi-line')}
       </Button>
@@ -33,7 +42,8 @@ const Resume = ({
       <Button
         outline
         color="secondary"
-        className="use-case"
+        className={`${showSegment ? 'segment-activated' : ''} use-case`}
+        onClick={handleToggleSegment}
       >
         {t('Segment')}
       </Button>
@@ -43,5 +53,21 @@ const Resume = ({
 
 Resume.propTypes = {
   t: PropTypes.func.isRequired,
+  handleToggleLine: PropTypes.func.isRequired,
+  handleToggleSegment: PropTypes.func.isRequired,
+  handleToggleSemiLine: PropTypes.func.isRequired,
+  showLine: PropTypes.bool.isRequired,
+  showSegment: PropTypes.bool.isRequired,
+  showSemiLine: PropTypes.bool.isRequired,
 };
-export default Resume;
+
+const mapStateToProps = state => ({
+  showLine: state.simulation.showLine,
+  showSegment: state.simulation.showSegment,
+  showSemiLine: state.simulation.showSemiLine,
+});
+
+
+const ConnectedComponent = connect(mapStateToProps)(Resume);
+
+export default ConnectedComponent;
