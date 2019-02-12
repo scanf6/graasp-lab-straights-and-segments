@@ -7,6 +7,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Fab from '@material-ui/core/Fab';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Styles from '../sidemenu/Styles';
+import Visualizer from '../../components/visualizer/Visualizer';
 import { AppState } from '../../config/AppState';
 import { toggleSideMenu } from '../../actions';
 
@@ -53,7 +54,7 @@ class Main extends Component {
           )
         }
 
-        <div className="main-container" />
+        <Visualizer />
       </main>
     );
   }
