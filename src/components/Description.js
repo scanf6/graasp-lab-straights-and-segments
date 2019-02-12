@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
+import Explanation from './Explanation';
 import Resume from './Resume';
 import {
   toggleLine,
@@ -46,6 +47,7 @@ export class Description extends Component {
           handleToggleSemiLine={this.handleToggleSemiLine}
           handleToggleSegment={this.handleToggleSegment}
         />
+        <Explanation />
       </div>
     );
   }
