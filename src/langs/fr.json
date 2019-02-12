@@ -1,17 +1,15 @@
 {
   "translations" : {
-    "This is the student view. Switch to the teacher view by clicking on the URL below.":
-      "Ceci est la vue des étudiants. Passez à la vue enseignant en cliquant sur l’URL ci-dessous.",
-    "This is the teacher view. Switch to the student view by clicking on the URL below.":
-      "Ceci est la vue de l'enseignant. Passez à la vue des étudiants en cliquant sur l’URL ci-dessous.",
-    "Welcome to the Graasp App Starter Kit": "Bienvenue dans le kit de démarrage de l'application Graasp",
     "Lab Title": "Titre du Labo à modifier",
-    "Lab Explanation": "à mettre à jour",
     "Observe": "Observer",
     "Test": "Tester",
     "Coming Soon!": "Bientôt disponible!",
     "Choose your panel color": "Choisis la couleur de panel",
     "Language": "Langue",
-    "Display Lab title": "Afficher le titre du Lab"
+    "Display Lab title": "Afficher le titre du Lab",
+    "Lab Explanation": "This lab allows the learner to be able to visualize and draw straights, semi-straights and segments.",
+    "Line": "Lign",
+    "Semi-line": "Demi-droite",
+    "Segment": "Segment"
   }
 }
