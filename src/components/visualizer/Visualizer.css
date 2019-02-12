@@ -1,0 +1,8 @@
+.line-activated,
+.semi-line-activated,
+.segment-activated,
+.btn-outline-secondary:hover {
+  background-color: rgb(0, 150, 136);
+  border-color: #fff !important;
+  color: #fff !important;
+}
