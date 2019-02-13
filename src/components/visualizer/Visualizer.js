@@ -109,7 +109,12 @@ export class Visualizer extends Component {
   };
 
   render() {
-    const { showLine, showSegment, showSemiLine } = this.props;
+    const {
+      showLine,
+      showSegment,
+      showSemiLine,
+      themeColor,
+    } = this.props;
     const { isMouseInside, lineCoordinates, circleCoordinates } = this.state;
     const scale = Math.min(
       window.innerWidth / CANVAS_VIRTUAL_WIDTH,
@@ -124,11 +129,12 @@ export class Visualizer extends Component {
             handleMouseEnter={this.handleMouseEnter}
             renderVerticalGrid={this.renderVerticalGrid()}
             renderHorizontalGrid={this.renderHorizontalGrid()}
-            scale={scale}
-            strokeWidth={isMouseInside ? 10 : 5}
             lineCoordinates={lineCoordinates}
             circleCoordinates={circleCoordinates}
             checkBoundaries={this.checkBoundaries}
+            scale={scale}
+            strokeWidth={isMouseInside ? 10 : 5}
+            themeColor={themeColor}
           />
         )
           : ''
@@ -147,6 +153,8 @@ export class Visualizer extends Component {
             renderHorizontalGrid={this.renderHorizontalGrid()}
             renderVerticalGrid={this.renderVerticalGrid()}
             scale={scale}
+            strokeWidth={isMouseInside ? 10 : 5}
+            themeColor={themeColor}
           />
         )
           : ''
@@ -160,6 +168,7 @@ Visualizer.propTypes = {
   showLine: PropTypes.bool.isRequired,
   showSegment: PropTypes.bool.isRequired,
   showSemiLine: PropTypes.bool.isRequired,
+  themeColor: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
