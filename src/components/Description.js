@@ -47,7 +47,7 @@ export class Description extends Component {
           handleToggleSemiLine={this.handleToggleSemiLine}
           handleToggleSegment={this.handleToggleSegment}
         />
-        <Explanation />
+        <Explanation t={t} />
       </div>
     );
   }
