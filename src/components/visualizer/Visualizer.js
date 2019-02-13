@@ -57,8 +57,60 @@ export class Visualizer extends Component {
     return lines;
   }
 
+  handleMouseEnter = () => {
+    document.body.style.cursor = 'pointer';
+    this.setState({ isMouseInside: true });
+  }
+
+  handleMouseLeave = () => {
+    document.body.style.cursor = 'default';
+    this.setState({ isMouseInside: false });
+  }
+
+  handleDragMove = (event) => {
+    const { lineCoordinates, circleCoordinates } = this.state;
+    const newLineCoordinates = [...lineCoordinates];
+    const newCircleCoordinates = [...circleCoordinates];
+    this.updateLineCoordinates(newLineCoordinates, event);
+    this.updateCircleCoordinates(newCircleCoordinates, event);
+  };
+
+  updateLineCoordinates = (newLineCoordinates, event) => {
+    const newX = event.target.x();
+    const newY = event.target.y();
+    const updatedLineCoordinates = [...newLineCoordinates];
+    updatedLineCoordinates[2] = newX;
+    updatedLineCoordinates[3] = newY;
+    if (newX > 10 && newX < 1400 && newY > 10 && newY < 650) {
+      this.setState({ lineCoordinates: updatedLineCoordinates });
+    }
+  }
+
+  updateCircleCoordinates = (newCircleCoordinates, event) => {
+    const newX = event.target.x();
+    const newY = event.target.y();
+    const updatedCircleCoordinates = [...newCircleCoordinates];
+    if (newX > 10 && newX < 1400 && newY > 10 && newY < 650) {
+      updatedCircleCoordinates[0] = newX;
+      updatedCircleCoordinates[1] = newY;
+      this.setState({ circleCoordinates: updatedCircleCoordinates });
+    }
+  }
+
+  checkBoundaries = ({ x, y }) => {
+    let newX = x < 20 ? 20 : x;
+    newX = x >= 1380 ? 1380 : newX;
+    let newY = y < 20 ? 20 : y;
+    newY = y >= 650 ? 650 : newY;
+    return {
+      x: newX,
+      y: newY,
+    };
+  };
+
   render() {
     const { showLine, showSegment, showSemiLine } = this.props;
+    const { isMouseInside, lineCoordinates, circleCoordinates } = this.state;
     const scale = Math.min(
       window.innerWidth / CANVAS_VIRTUAL_WIDTH,
       window.innerHeight / CANVAS_VIRTUAL_HEIGHT,
@@ -67,9 +119,16 @@ export class Visualizer extends Component {
       <div className="visualizer-container">
         { showSegment ? (
           <Segment
+            handleDragMove={this.handleDragMove}
+            handleMouseLeave={this.handleMouseLeave}
+            handleMouseEnter={this.handleMouseEnter}
             renderVerticalGrid={this.renderVerticalGrid()}
             renderHorizontalGrid={this.renderHorizontalGrid()}
             scale={scale}
+            strokeWidth={isMouseInside ? 10 : 5}
+            lineCoordinates={lineCoordinates}
+            circleCoordinates={circleCoordinates}
+            checkBoundaries={this.checkBoundaries}
           />
         )
           : ''
