@@ -7,9 +7,15 @@
     "Choose your panel color": "Choisis la couleur de panel",
     "Language": "Langue",
     "Display Lab title": "Afficher le titre du Lab",
-    "Lab Explanation": "This lab allows the learner to be able to visualize and draw straights, semi-straights and segments.",
-    "Line": "Lign",
+    "Lab Explanation": "Ce laboratoire permet à l'apprenant de pouvoir visualiser et dessiner des lignes droites, semi-droites et des segments.",
+    "Line": "Ligne",
+    "Description": "Description",
     "Semi-line": "Demi-droite",
-    "Segment": "Segment"
+    "Segment": "Segment",
+    "Straights and Segments": "Droites, Demi-droites et Segments",
+    "Expression": "Expression",
+    "Line Explanation": "Une Ligne ou Droite, est une figure géométrique formé de points alignés, et illimitée des deux côtés.",
+    "SemiLine Explanation": "Une Demi-Droite, est une portion de droite limitée par un point appelé  Origine. Dans notre cas, la demi-droite commence par le point  A, et est limitée par le point  B.",
+    "Segment Explanation": "Un Segment, est une portion de droite délimitée par deux points appelés extrémités du segment. Dans notre cas, le Segment est limité par le point  A, et par le point  B."
   }
 }

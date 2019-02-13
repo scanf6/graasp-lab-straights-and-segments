@@ -9,6 +9,12 @@
     "Lab Explanation": "This lab allows the learner to be able to visualize and draw straights, semi-straights and segments.",
     "Line": "Line",
     "Semi-line": "Semi-line",
-    "Segment": "Segment"
+    "Description": "Description",
+    "Segment": "Segment",
+    "Expression": "Expression",
+    "Straights and Segments": "Straights and Segments",
+    "Line Explanation": "A Line or Right, is a geometrical figure formed of aligned points, and unlimited on both sides.",
+    "SemiLine Explanation": "A Half-Right is a portion of the right bounded by a point called Origin. In our case, the half-line begins with point A, and is bounded by point B.",
+    "Segment Explanation": "A Segment, is a portion of line delimited by two points called ends of the segment. In our case, the Segment is bounded by point A and point B."
   }
 }
