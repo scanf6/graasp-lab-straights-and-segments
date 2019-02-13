@@ -11,6 +11,7 @@ const Resume = ({
   showLine,
   showSegment,
   showSemiLine,
+  themeColor,
 }) => (
   <div className="resume-container">
     <div className="description-content">
@@ -26,6 +27,7 @@ const Resume = ({
         color="secondary"
         className={`${showLine ? 'line-activated' : ''} use-case`}
         onClick={handleToggleLine}
+        style={{ backgroundColor: showLine ? themeColor : '' }}
       >
         {t('Line')}
       </Button>
@@ -35,6 +37,7 @@ const Resume = ({
         color="secondary"
         className={`${showSemiLine ? 'semi-line-activated' : ''} use-case semi-line`}
         onClick={handleToggleSemiLine}
+        style={{ backgroundColor: showSemiLine ? themeColor : '' }}
       >
         {t('Semi-line')}
       </Button>
@@ -44,6 +47,7 @@ const Resume = ({
         color="secondary"
         className={`${showSegment ? 'segment-activated' : ''} use-case`}
         onClick={handleToggleSegment}
+        style={{ backgroundColor: showSegment ? themeColor : '' }}
       >
         {t('Segment')}
       </Button>
@@ -59,9 +63,11 @@ Resume.propTypes = {
   showLine: PropTypes.bool.isRequired,
   showSegment: PropTypes.bool.isRequired,
   showSemiLine: PropTypes.bool.isRequired,
+  themeColor: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
+  themeColor: state.layout.themeColor,
   showLine: state.simulation.showLine,
   showSegment: state.simulation.showSegment,
   showSemiLine: state.simulation.showSemiLine,
