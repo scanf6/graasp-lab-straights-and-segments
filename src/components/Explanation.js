@@ -6,42 +6,43 @@ const Explanation = ({
   showLine,
   showSegment,
   showSemiLine,
+  t,
 }) => (
   <div className="explanation-component">
     { showSemiLine ? (
-      <p>
-        Une Demi-Droite, est une portion de droite limitée par un point appelé
-        &nbsp;
-        <b>Origine</b>
-        .
-        Dans notre cas, la demi-droite commence par le point
-        &nbsp;
-        <b>A</b>
-        , et est limitée par le point
-        &nbsp;
-        <b>B</b>
-        .
-      </p>
+      <div className="expression-container">
+        <h2>
+          {t('Expression')}
+          : (AB]
+        </h2>
+        <p>
+          {t('SemiLine Explanation')}
+        </p>
+      </div>
     ) : ''
     }
     { showSegment ? (
-      <p>
-        Un Segment, est une portion de droite délimitée par deux points
-        appelés extrémités du segment. Dans notre cas, le Segment est limité par le point
-        &nbsp;
-        <b>A</b>
-        , et par le point
-        &nbsp;
-        <b>B</b>
-        .
-      </p>
+      <div className="expression-container">
+        <h2>
+          {t('Expression')}
+          : [AB]
+        </h2>
+        <p>
+          {t('Segment Explanation')}
+        </p>
+      </div>
     ) : ''
     }
     { showLine ? (
-      <p>
-        Une Ligne ou Droite, est une figure géométrique formé de points alignés,
-        et illimitée des deux côtés.
-      </p>
+      <div className="expression-container">
+        <h2>
+          {t('Expression')}
+          : (AB)
+        </h2>
+        <p>
+          {t('Line Explanation')}
+        </p>
+      </div>
     ) : ''
     }
   </div>
@@ -51,6 +52,7 @@ Explanation.propTypes = {
   showLine: PropTypes.bool.isRequired,
   showSegment: PropTypes.bool.isRequired,
   showSemiLine: PropTypes.bool.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
