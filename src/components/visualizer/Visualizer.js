@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next';
 import { Line } from 'react-konva';
 import { AppState } from '../../config/AppState';
 import Liner from './cases/Liner';
@@ -114,6 +115,7 @@ export class Visualizer extends Component {
       showSegment,
       showSemiLine,
       themeColor,
+      t,
     } = this.props;
     const { isMouseInside, lineCoordinates, circleCoordinates } = this.state;
     const scale = Math.min(
@@ -135,6 +137,7 @@ export class Visualizer extends Component {
             scale={scale}
             strokeWidth={isMouseInside ? 10 : 5}
             themeColor={themeColor}
+            t={t}
           />
         )
           : ''
@@ -144,6 +147,8 @@ export class Visualizer extends Component {
             renderHorizontalGrid={this.renderHorizontalGrid()}
             renderVerticalGrid={this.renderVerticalGrid()}
             scale={scale}
+            themeColor={themeColor}
+            t={t}
           />
         )
           : ''
@@ -155,6 +160,7 @@ export class Visualizer extends Component {
             scale={scale}
             strokeWidth={isMouseInside ? 10 : 5}
             themeColor={themeColor}
+            t={t}
           />
         )
           : ''
@@ -169,6 +175,7 @@ Visualizer.propTypes = {
   showSegment: PropTypes.bool.isRequired,
   showSemiLine: PropTypes.bool.isRequired,
   themeColor: PropTypes.string.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -180,4 +187,4 @@ const mapStateToProps = state => ({
 
 const ConnectedComponent = connect(mapStateToProps)(Visualizer);
 
-export default ConnectedComponent;
+export default withTranslation()(ConnectedComponent);
