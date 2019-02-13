@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  Circle,
-  Stage,
-  Layer,
-  Line,
-  Text,
-} from 'react-konva';
+import { Line } from 'react-konva';
 import { AppState } from '../../config/AppState';
 import Liner from './cases/Liner';
+import Segment from './cases/Segment';
+import SemiLine from './cases/SemiLine';
 import './Visualizer.css';
 import {
   BLOCK_SNAP_SIZE,
@@ -63,7 +59,6 @@ export class Visualizer extends Component {
 
   render() {
     const { showLine, showSegment, showSemiLine } = this.props;
-
     const scale = Math.min(
       window.innerWidth / CANVAS_VIRTUAL_WIDTH,
       window.innerHeight / CANVAS_VIRTUAL_HEIGHT,
@@ -71,127 +66,29 @@ export class Visualizer extends Component {
     return (
       <div className="visualizer-container">
         { showSegment ? (
-          <Stage
-            width={window.innerWidth}
-            height={window.innerHeight}
-            scaleX={scale}
-            scaleY={scale}
-          >
-            <Layer>
-              <Line
-                points={[100, 400, 600, 200]}
-                stroke={5}
-                strokeWidth={10}
-              />
-              <Circle
-                x={100}
-                y={400}
-                stroke={5}
-                fill="#000"
-                radius={10}
-                strokeWidth={5}
-                shadowBlur={5}
-              />
-              <Circle
-                x={600}
-                y={200}
-                stroke={5}
-                fill="#000"
-                radius={10}
-                strokeWidth={5}
-                shadowBlur={5}
-              />
-              <Text
-                x={50}
-                y={350}
-                text="A"
-                fontSize={40}
-                fill="#000"
-              />
-              <Text
-                x={600}
-                y={130}
-                text="B"
-                fontSize={40}
-                fill="#000"
-              />
-              {this.renderHorizontalGrid()}
-              {this.renderVerticalGrid()}
-            </Layer>
-          </Stage>
+          <Segment
+            renderVerticalGrid={this.renderVerticalGrid()}
+            renderHorizontalGrid={this.renderHorizontalGrid()}
+            scale={scale}
+          />
         )
           : ''
         }
         { showLine ? (
-          <Stage
-            width={window.innerWidth}
-            height={window.innerHeight}
-            scaleX={scale}
-            scaleY={scale}
-          >
-            <Layer>
-              <Liner />
-              {this.renderHorizontalGrid()}
-              {this.renderVerticalGrid()}
-            </Layer>
-          </Stage>
+          <Liner
+            renderHorizontalGrid={this.renderHorizontalGrid()}
+            renderVerticalGrid={this.renderVerticalGrid()}
+            scale={scale}
+          />
         )
           : ''
         }
         { showSemiLine ? (
-          <Stage
-            width={window.innerWidth}
-            height={window.innerHeight}
-            scaleX={scale}
-            scaleY={scale}
-          >
-            <Layer>
-              <Line
-                points={[100, 400, 600, 200]}
-                stroke={5}
-                strokeWidth={10}
-              />
-              <Line
-                points={[600, 200, 800, 120]}
-                stroke={5}
-                strokeWidth={10}
-              />
-              <Circle
-                x={100}
-                y={400}
-                stroke={5}
-                fill="#000"
-                radius={10}
-                strokeWidth={5}
-                shadowBlur={5}
-              />
-              <Circle
-                x={600}
-                y={200}
-                stroke={5}
-                fill="#000"
-                radius={10}
-                strokeWidth={5}
-                shadowBlur={5}
-              />
-              <Text
-                x={50}
-                y={350}
-                text="A"
-                fontSize={40}
-                fill="#000"
-              />
-              <Text
-                x={600}
-                y={130}
-                text="B"
-                fontSize={40}
-                fill="#000"
-              />
-              {this.renderHorizontalGrid()}
-              {this.renderVerticalGrid()}
-            </Layer>
-          </Stage>
+          <SemiLine
+            renderHorizontalGrid={this.renderHorizontalGrid()}
+            renderVerticalGrid={this.renderVerticalGrid()}
+            scale={scale}
+          />
         )
           : ''
         }
