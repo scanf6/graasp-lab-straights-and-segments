@@ -18,17 +18,23 @@ import {
 } from '../../../config/properties';
 import {
   CIRCLE_COMMON_X_0,
-  CIRCLE_COMMON_X_1,
   CIRCLE_COMMON_Y_0,
-  CIRCLE_COMMON_Y_1,
   CIRCLE_TEXT_X_0,
-  CIRCLE_TEXT_X_1,
   CIRCLE_TEXT_Y_0,
-  CIRCLE_TEXT_Y_1,
-  COMMON_LINE_POINTS,
 } from '../../../config/coordinates';
 
-const Segment = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
+const Segment = ({
+  handleDragMove,
+  handleMouseEnter,
+  handleMouseLeave,
+  renderHorizontalGrid,
+  renderVerticalGrid,
+  scale,
+  strokeWidth,
+  lineCoordinates,
+  circleCoordinates,
+  checkBoundaries,
+}) => (
   <Stage
     width={window.innerWidth}
     height={window.innerHeight}
@@ -39,7 +45,7 @@ const Segment = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
       {renderHorizontalGrid}
       {renderVerticalGrid}
       <Line
-        points={COMMON_LINE_POINTS}
+        points={lineCoordinates}
         stroke={stroke}
         strokeWidth={lineStrokeWidth}
       />
@@ -49,17 +55,22 @@ const Segment = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
         stroke={stroke}
         fill={fill}
         radius={circleRadius}
-        strokeWidth={circleStrokeWidth}
         shadowBlur={circleShadowBlur}
+        strokeWidth={circleStrokeWidth}
       />
       <Circle
-        x={CIRCLE_COMMON_X_1}
-        y={CIRCLE_COMMON_Y_1}
+        x={circleCoordinates[0]}
+        y={circleCoordinates[1]}
         stroke={stroke}
         fill={fill}
         radius={circleRadius}
-        strokeWidth={circleStrokeWidth}
         shadowBlur={circleShadowBlur}
+        strokeWidth={strokeWidth}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onDragMove={handleDragMove}
+        draggable
+        dragBoundFunc={pos => checkBoundaries(pos)}
       />
       <Text
         x={CIRCLE_TEXT_X_0}
@@ -69,8 +80,8 @@ const Segment = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
         fill={fill}
       />
       <Text
-        x={CIRCLE_TEXT_X_1}
-        y={CIRCLE_TEXT_Y_1}
+        x={circleCoordinates[0] + 30}
+        y={circleCoordinates[1]}
         text="B"
         fontSize={fontSize}
         fill={fill}
@@ -81,7 +92,14 @@ const Segment = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
 
 Segment.propTypes = {
   scale: PropTypes.number.isRequired,
+  strokeWidth: PropTypes.number.isRequired,
+  handleDragMove: PropTypes.func.isRequired,
+  checkBoundaries: PropTypes.func.isRequired,
+  handleMouseEnter: PropTypes.func.isRequired,
+  handleMouseLeave: PropTypes.func.isRequired,
   renderVerticalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   renderHorizontalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  lineCoordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
+  circleCoordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 export default Segment;
