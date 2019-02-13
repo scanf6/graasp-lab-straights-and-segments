@@ -8,7 +8,6 @@ import {
   Text,
 } from 'react-konva';
 import {
-  fill,
   stroke,
   fontSize,
   circleRadius,
@@ -29,11 +28,12 @@ const Segment = ({
   handleMouseLeave,
   renderHorizontalGrid,
   renderVerticalGrid,
-  scale,
-  strokeWidth,
   lineCoordinates,
   circleCoordinates,
   checkBoundaries,
+  scale,
+  strokeWidth,
+  themeColor,
 }) => (
   <Stage
     width={window.innerWidth}
@@ -53,7 +53,7 @@ const Segment = ({
         x={CIRCLE_COMMON_X_0}
         y={CIRCLE_COMMON_Y_0}
         stroke={stroke}
-        fill={fill}
+        fill={themeColor}
         radius={circleRadius}
         shadowBlur={circleShadowBlur}
         strokeWidth={circleStrokeWidth}
@@ -62,7 +62,7 @@ const Segment = ({
         x={circleCoordinates[0]}
         y={circleCoordinates[1]}
         stroke={stroke}
-        fill={fill}
+        fill={themeColor}
         radius={circleRadius}
         shadowBlur={circleShadowBlur}
         strokeWidth={strokeWidth}
@@ -77,14 +77,14 @@ const Segment = ({
         y={CIRCLE_TEXT_Y_0}
         text="A"
         fontSize={fontSize}
-        fill={fill}
+        fill={themeColor}
       />
       <Text
         x={circleCoordinates[0] + 30}
         y={circleCoordinates[1]}
         text="B"
         fontSize={fontSize}
-        fill={fill}
+        fill={themeColor}
       />
     </Layer>
   </Stage>
@@ -92,6 +92,7 @@ const Segment = ({
 
 Segment.propTypes = {
   scale: PropTypes.number.isRequired,
+  themeColor: PropTypes.string.isRequired,
   strokeWidth: PropTypes.number.isRequired,
   handleDragMove: PropTypes.func.isRequired,
   checkBoundaries: PropTypes.func.isRequired,
@@ -102,4 +103,5 @@ Segment.propTypes = {
   lineCoordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
   circleCoordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
+
 export default Segment;

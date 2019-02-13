@@ -8,12 +8,10 @@ import {
   Stage,
 } from 'react-konva';
 import {
-  fill,
   stroke,
   fontSize,
   circleRadius,
   circleShadowBlur,
-  circleStrokeWidth,
   lineStrokeWidth,
 } from '../../../config/properties';
 import {
@@ -28,7 +26,13 @@ import {
   COMMON_LINE_POINTS,
 } from '../../../config/coordinates';
 
-const SemiLine = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
+const SemiLine = ({
+  scale,
+  renderVerticalGrid,
+  renderHorizontalGrid,
+  strokeWidth,
+  themeColor,
+}) => (
   <Stage
     width={window.innerWidth}
     height={window.innerHeight}
@@ -52,18 +56,18 @@ const SemiLine = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
         x={CIRCLE_COMMON_X_0}
         y={CIRCLE_COMMON_Y_0}
         stroke={stroke}
-        fill={fill}
+        fill={themeColor}
         radius={circleRadius}
-        strokeWidth={circleStrokeWidth}
+        strokeWidth={strokeWidth}
         shadowBlur={circleShadowBlur}
       />
       <Circle
         x={CIRCLE_COMMON_X_1}
         y={CIRCLE_COMMON_Y_1}
         stroke={stroke}
-        fill={fill}
+        fill={themeColor}
         radius={circleRadius}
-        strokeWidth={circleStrokeWidth}
+        strokeWidth={strokeWidth}
         shadowBlur={circleShadowBlur}
       />
       <Text
@@ -71,14 +75,14 @@ const SemiLine = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
         y={CIRCLE_TEXT_Y_0}
         text="A"
         fontSize={fontSize}
-        fill={fill}
+        fill={themeColor}
       />
       <Text
         x={CIRCLE_TEXT_X_1}
         y={CIRCLE_TEXT_Y_1}
         text="B"
         fontSize={fontSize}
-        fill={fill}
+        fill={themeColor}
       />
     </Layer>
   </Stage>
@@ -86,6 +90,8 @@ const SemiLine = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
 
 SemiLine.propTypes = {
   scale: PropTypes.number.isRequired,
+  strokeWidth: PropTypes.number.isRequired,
+  themeColor: PropTypes.string.isRequired,
   renderVerticalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   renderHorizontalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
