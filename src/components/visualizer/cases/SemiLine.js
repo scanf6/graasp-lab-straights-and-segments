@@ -32,6 +32,7 @@ const SemiLine = ({
   renderHorizontalGrid,
   strokeWidth,
   themeColor,
+  t,
 }) => (
   <Stage
     width={window.innerWidth}
@@ -71,6 +72,13 @@ const SemiLine = ({
         shadowBlur={circleShadowBlur}
       />
       <Text
+        x={10}
+        y={15}
+        text={t('Semi Line title')}
+        fontSize={fontSize}
+        fill={themeColor}
+      />
+      <Text
         x={CIRCLE_TEXT_X_0}
         y={CIRCLE_TEXT_Y_0}
         text="A"
@@ -90,6 +98,7 @@ const SemiLine = ({
 
 SemiLine.propTypes = {
   scale: PropTypes.number.isRequired,
+  t: PropTypes.func.isRequired,
   strokeWidth: PropTypes.number.isRequired,
   themeColor: PropTypes.string.isRequired,
   renderVerticalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

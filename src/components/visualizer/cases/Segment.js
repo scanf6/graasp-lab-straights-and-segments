@@ -34,6 +34,7 @@ const Segment = ({
   scale,
   strokeWidth,
   themeColor,
+  t,
 }) => (
   <Stage
     width={window.innerWidth}
@@ -80,6 +81,13 @@ const Segment = ({
         fill={themeColor}
       />
       <Text
+        x={10}
+        y={15}
+        text={t('Segment title')}
+        fontSize={fontSize}
+        fill={themeColor}
+      />
+      <Text
         x={circleCoordinates[0] + 30}
         y={circleCoordinates[1]}
         text="B"
@@ -92,6 +100,7 @@ const Segment = ({
 
 Segment.propTypes = {
   scale: PropTypes.number.isRequired,
+  t: PropTypes.func.isRequired,
   themeColor: PropTypes.string.isRequired,
   strokeWidth: PropTypes.number.isRequired,
   handleDragMove: PropTypes.func.isRequired,

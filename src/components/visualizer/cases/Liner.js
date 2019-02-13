@@ -1,12 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Line, Layer, Stage } from 'react-konva';
 import {
+  Line,
+  Layer,
+  Stage,
+  Text,
+} from 'react-konva';
+import {
+  fontSize,
   stroke,
   lineStrokeWidth,
 } from '../../../config/properties';
 
-const Liner = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
+const Liner = ({
+  scale,
+  renderVerticalGrid,
+  renderHorizontalGrid,
+  themeColor,
+  t,
+}) => (
   <Stage
     width={window.innerWidth}
     height={window.innerHeight}
@@ -21,12 +33,21 @@ const Liner = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
         stroke={stroke}
         strokeWidth={lineStrokeWidth}
       />
+      <Text
+        x={10}
+        y={15}
+        text={t('Line title')}
+        fontSize={fontSize}
+        fill={themeColor}
+      />
     </Layer>
   </Stage>
 );
 
 Liner.propTypes = {
   scale: PropTypes.number.isRequired,
+  t: PropTypes.func.isRequired,
+  themeColor: PropTypes.string.isRequired,
   renderVerticalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   renderHorizontalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
