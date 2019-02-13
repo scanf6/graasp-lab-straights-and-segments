@@ -6,8 +6,8 @@ import {
 
 const INITIAL_STATE = {
   showLine: false,
-  showSemiLine: false,
-  showSegment: true,
+  showSemiLine: true,
+  showSegment: false,
 };
 
 
