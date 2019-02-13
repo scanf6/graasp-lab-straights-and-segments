@@ -19,12 +19,15 @@
 .SettingManager-container button {
   outline: 0;
 }
-.description-content h2 {
+h2 {
   color: #555;
   margin: 1rem 0;
   text-align: left;
   padding-left: 1rem;
   font-size: 1.3rem;
+}
+.expression-container h2 {
+  padding-left: 0;
 }
 .description-content p {
   color: #555;
