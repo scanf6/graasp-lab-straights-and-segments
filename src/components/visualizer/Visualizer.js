@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
-import { Line } from 'react-konva';
+import { Line, Stage, Layer } from 'react-konva';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import { AppState } from '../../config/AppState';
 import Liner from './cases/Liner';
 import Segment from './cases/Segment';
 import SemiLine from './cases/SemiLine';
+import DrawLine from './practices/DrawLine';
 import './Visualizer.css';
 import {
   BLOCK_SNAP_SIZE,
@@ -109,6 +112,59 @@ export class Visualizer extends Component {
     };
   };
 
+  handleClick = (e) => {
+    const { isDrawing, isDrawingMode, shapes } = this.state;
+    if (!isDrawingMode) return;
+    // if we are drawing a shape, a click finishes the drawing
+    if (isDrawing) {
+      this.setState({ isDrawing: !isDrawing });
+      return;
+    }
+
+    // otherwise, add a new rectangle at the mouse position with 0 width and height,
+    // and set isDrawing to true
+    const newShapes = shapes.slice();
+    newShapes.push({
+      x: e.evt.layerX,
+      y: e.evt.layerY,
+      width: e.evt.layerX,
+      height: e.evt.layerY,
+    });
+
+    this.setState({
+      isDrawing: true,
+      shapes: newShapes,
+    });
+  };
+
+  handleMouseMove = (e) => {
+    const { isDrawing, isDrawingMode, shapes } = this.state;
+    if (!isDrawingMode) return;
+
+    // update the current rectangle's width and height based on the mouse position
+    if (isDrawing) {
+      // get the current shape (the last shape in this.state.shapes)
+      const currShapeIndex = shapes.length - 1;
+      const currShape = shapes[currShapeIndex];
+
+      const newShapesList = shapes.slice();
+      newShapesList[currShapeIndex] = {
+        x: currShape.x, // keep starting position the same
+        y: currShape.y,
+        width: e.evt.layerX, // new width and height
+        height: e.evt.layerY,
+      };
+
+      this.setState({ shapes: newShapesList });
+    }
+  };
+
+  handleCheckboxChange = () => {
+    // toggle drawing mode
+    const { isDrawingMode } = this.state;
+    this.setState({ isDrawingMode: !isDrawingMode });
+  };
+
   render() {
     const {
       showLine,
@@ -117,7 +173,13 @@ export class Visualizer extends Component {
       themeColor,
       t,
     } = this.props;
-    const { isMouseInside, lineCoordinates, circleCoordinates } = this.state;
+    const {
+      isMouseInside,
+      lineCoordinates,
+      circleCoordinates,
+      shapes,
+      isDrawingMode,
+    } = this.state;
     const scale = Math.min(
       window.innerWidth / CANVAS_VIRTUAL_WIDTH,
       window.innerHeight / CANVAS_VIRTUAL_HEIGHT,
@@ -143,13 +205,61 @@ export class Visualizer extends Component {
           : ''
         }
         { showLine ? (
-          <Liner
-            renderHorizontalGrid={this.renderHorizontalGrid()}
-            renderVerticalGrid={this.renderVerticalGrid()}
-            scale={scale}
-            themeColor={themeColor}
-            t={t}
-          />
+          <div>
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  checked={isDrawingMode}
+                  onChange={this.handleCheckboxChange}
+                  value="checkedA"
+                />
+              )}
+              label="Drawing Mode"
+            />
+            <Liner
+              renderHorizontalGrid={this.renderHorizontalGrid()}
+              renderVerticalGrid={this.renderVerticalGrid()}
+              scale={scale}
+              themeColor={themeColor}
+              t={t}
+            />
+            <Stage
+              width={window.innerWidth}
+              height={window.innerHeight}
+              onContentClick={this.handleClick}
+              onContentMouseMove={this.handleMouseMove}
+              scalex={scale}
+              scaley={scale}
+            >
+              <Layer>
+                {this.renderHorizontalGrid()}
+                {this.renderVerticalGrid()}
+                <Liner
+                  renderHorizontalGrid={this.renderHorizontalGrid()}
+                  renderVerticalGrid={this.renderVerticalGrid()}
+                  scale={scale}
+                  themeColor={themeColor}
+                  t={t}
+                />
+                {shapes.map(shape => (
+                  <DrawLine
+                    key={shape.id}
+                    x={shape.x}
+                    y={shape.y}
+                    width={shape.width}
+                    height={shape.height}
+                    isDrawingMode={isDrawingMode}
+                    scale={scale}
+                    t={t}
+                    themeColor={themeColor}
+                    handleClick={this.handleClick}
+                    handleMouseMove={this.handleMouseMove}
+                  />
+                ))
+                }
+              </Layer>
+            </Stage>
+          </div>
         )
           : ''
         }
