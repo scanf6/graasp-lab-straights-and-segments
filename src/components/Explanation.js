@@ -13,7 +13,7 @@ const Explanation = ({
       <div className="expression-container">
         <h2>
           {t('Expression')}
-          : (AB]
+          : [AB)
         </h2>
         <p>
           {t('SemiLine Explanation')}
