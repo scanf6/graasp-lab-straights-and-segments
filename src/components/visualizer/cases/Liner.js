@@ -1,55 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Line,
-  Layer,
-  Stage,
-  Text,
-} from 'react-konva';
+import { Line, Group, Text } from 'react-konva';
 import {
   fontSize,
   stroke,
   lineStrokeWidth,
 } from '../../../config/properties';
 
-const Liner = ({
-  scale,
-  renderVerticalGrid,
-  renderHorizontalGrid,
-  themeColor,
-  t,
-}) => (
-  <Stage
-    width={window.innerWidth}
-    height={window.innerHeight}
-    scaleX={scale}
-    scaleY={scale}
-  >
-    <Layer>
-      {renderHorizontalGrid}
-      {renderVerticalGrid}
-      <Line
-        points={[100, 400, 700, 50]}
-        stroke={stroke}
-        strokeWidth={lineStrokeWidth}
-      />
-      <Text
-        x={10}
-        y={15}
-        text={t('Line title')}
-        fontSize={fontSize}
-        fill={themeColor}
-      />
-    </Layer>
-  </Stage>
+const Liner = ({ themeColor }) => (
+  <Group>
+    <Line
+      points={[0, 400, 1500, 50]}
+      stroke={stroke}
+      strokeWidth={lineStrokeWidth}
+    />
+    <Text
+      x={1300}
+      y={40}
+      text="(D)"
+      fontSize={fontSize}
+      fill={themeColor}
+    />
+  </Group>
 );
 
-Liner.propTypes = {
-  scale: PropTypes.number.isRequired,
-  t: PropTypes.func.isRequired,
-  themeColor: PropTypes.string.isRequired,
-  renderVerticalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  renderHorizontalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-};
+Liner.propTypes = { themeColor: PropTypes.string.isRequired };
 
 export default Liner;
