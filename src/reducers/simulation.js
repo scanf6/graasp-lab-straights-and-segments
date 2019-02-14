@@ -5,8 +5,8 @@ import {
 } from '../types';
 
 const INITIAL_STATE = {
-  showLine: false,
-  showSemiLine: true,
+  showLine: true,
+  showSemiLine: false,
   showSegment: false,
 };
 
