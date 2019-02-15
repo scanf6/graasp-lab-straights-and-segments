@@ -103,10 +103,7 @@ export class Visualizer extends Component {
     newX = x >= 1380 ? 1380 : newX;
     let newY = y < 20 ? 20 : y;
     newY = y >= 650 ? 650 : newY;
-    return {
-      x: newX,
-      y: newY,
-    };
+    return { x: newX, y: newY };
   };
 
   handleClick = (e, shape) => {
@@ -168,9 +165,8 @@ export class Visualizer extends Component {
   };
 
   handleDrawingMode = () => {
-    // toggle drawing mode
     const { isDrawingMode } = this.state;
-    this.setState({ isDrawingMode: !isDrawingMode });
+    this.setState({ isDrawingMode: !isDrawingMode }); // toggle drawing mode
   };
 
   render() {
