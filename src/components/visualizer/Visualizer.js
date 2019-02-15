@@ -212,6 +212,7 @@ export class Visualizer extends Component {
                   checked={isDrawingMode}
                   onChange={this.handleCheckboxChange}
                   value="checkedA"
+                  style={{ color: themeColor }}
                 />
               )}
               label="Drawing Mode"
