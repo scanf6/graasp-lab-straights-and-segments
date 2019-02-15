@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Circle,
-  Stage,
-  Layer,
+  Group,
   Line,
   Text,
 } from 'react-konva';
@@ -26,80 +25,67 @@ const Segment = ({
   handleDragMove,
   handleMouseEnter,
   handleMouseLeave,
-  renderHorizontalGrid,
-  renderVerticalGrid,
   lineCoordinates,
   circleCoordinates,
   checkBoundaries,
-  scale,
   strokeWidth,
   themeColor,
   t,
 }) => (
-  <Stage
-    width={window.innerWidth}
-    height={window.innerHeight}
-    scaleX={scale}
-    scaleY={scale}
-  >
-    <Layer>
-      {renderHorizontalGrid}
-      {renderVerticalGrid}
-      <Line
-        points={lineCoordinates}
-        stroke={stroke}
-        strokeWidth={lineStrokeWidth}
-      />
-      <Circle
-        x={CIRCLE_COMMON_X_0}
-        y={CIRCLE_COMMON_Y_0}
-        stroke={stroke}
-        fill={themeColor}
-        radius={circleRadius}
-        shadowBlur={circleShadowBlur}
-        strokeWidth={circleStrokeWidth}
-      />
-      <Circle
-        x={circleCoordinates[0]}
-        y={circleCoordinates[1]}
-        stroke={stroke}
-        fill={themeColor}
-        radius={circleRadius}
-        shadowBlur={circleShadowBlur}
-        strokeWidth={strokeWidth}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onDragMove={handleDragMove}
-        draggable
-        dragBoundFunc={pos => checkBoundaries(pos)}
-      />
-      <Text
-        x={CIRCLE_TEXT_X_0}
-        y={CIRCLE_TEXT_Y_0}
-        text="A"
-        fontSize={fontSize}
-        fill={themeColor}
-      />
-      <Text
-        x={10}
-        y={15}
-        text={t('Segment title')}
-        fontSize={fontSize}
-        fill={themeColor}
-      />
-      <Text
-        x={circleCoordinates[0] + 30}
-        y={circleCoordinates[1]}
-        text="B"
-        fontSize={fontSize}
-        fill={themeColor}
-      />
-    </Layer>
-  </Stage>
+  <Group>
+    <Line
+      points={lineCoordinates}
+      stroke={stroke}
+      strokeWidth={lineStrokeWidth}
+    />
+    <Circle
+      x={CIRCLE_COMMON_X_0}
+      y={CIRCLE_COMMON_Y_0}
+      stroke={stroke}
+      fill={themeColor}
+      radius={circleRadius}
+      shadowBlur={circleShadowBlur}
+      strokeWidth={circleStrokeWidth}
+    />
+    <Circle
+      x={circleCoordinates[0]}
+      y={circleCoordinates[1]}
+      stroke={stroke}
+      fill={themeColor}
+      radius={circleRadius}
+      shadowBlur={circleShadowBlur}
+      strokeWidth={strokeWidth}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onDragMove={handleDragMove}
+      draggable
+      dragBoundFunc={pos => checkBoundaries(pos)}
+    />
+    <Text
+      x={CIRCLE_TEXT_X_0}
+      y={CIRCLE_TEXT_Y_0}
+      text="A"
+      fontSize={fontSize}
+      fill={themeColor}
+    />
+    <Text
+      x={10}
+      y={15}
+      text={t('Segment title')}
+      fontSize={fontSize}
+      fill={themeColor}
+    />
+    <Text
+      x={circleCoordinates[0] + 30}
+      y={circleCoordinates[1]}
+      text="B"
+      fontSize={fontSize}
+      fill={themeColor}
+    />
+  </Group>
 );
 
 Segment.propTypes = {
-  scale: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,
   themeColor: PropTypes.string.isRequired,
   strokeWidth: PropTypes.number.isRequired,
@@ -107,8 +93,6 @@ Segment.propTypes = {
   checkBoundaries: PropTypes.func.isRequired,
   handleMouseEnter: PropTypes.func.isRequired,
   handleMouseLeave: PropTypes.func.isRequired,
-  renderVerticalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  renderHorizontalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   lineCoordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
   circleCoordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
