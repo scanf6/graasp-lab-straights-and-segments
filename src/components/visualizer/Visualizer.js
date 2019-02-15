@@ -12,11 +12,7 @@ import SemiLine from './cases/SemiLine';
 import DrawLine from './practices/DrawLine';
 import DrawSegment from './practices/DrawSegment';
 import './Visualizer.css';
-import {
-  BLOCK_SNAP_SIZE,
-  CANVAS_VIRTUAL_WIDTH,
-  CANVAS_VIRTUAL_HEIGHT,
-} from '../../config/constants';
+import { BLOCK_SNAP_SIZE, CANVAS_VIRTUAL_WIDTH, CANVAS_VIRTUAL_HEIGHT } from '../../config/constants';
 
 export class Visualizer extends Component {
   state = AppState;
