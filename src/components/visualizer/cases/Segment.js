@@ -8,7 +8,6 @@ import {
   Text,
 } from 'react-konva';
 import {
-  fill,
   stroke,
   fontSize,
   circleRadius,
@@ -18,17 +17,25 @@ import {
 } from '../../../config/properties';
 import {
   CIRCLE_COMMON_X_0,
-  CIRCLE_COMMON_X_1,
   CIRCLE_COMMON_Y_0,
-  CIRCLE_COMMON_Y_1,
   CIRCLE_TEXT_X_0,
-  CIRCLE_TEXT_X_1,
   CIRCLE_TEXT_Y_0,
-  CIRCLE_TEXT_Y_1,
-  COMMON_LINE_POINTS,
 } from '../../../config/coordinates';
 
-const Segment = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
+const Segment = ({
+  handleDragMove,
+  handleMouseEnter,
+  handleMouseLeave,
+  renderHorizontalGrid,
+  renderVerticalGrid,
+  lineCoordinates,
+  circleCoordinates,
+  checkBoundaries,
+  scale,
+  strokeWidth,
+  themeColor,
+  t,
+}) => (
   <Stage
     width={window.innerWidth}
     height={window.innerHeight}
@@ -39,7 +46,7 @@ const Segment = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
       {renderHorizontalGrid}
       {renderVerticalGrid}
       <Line
-        points={COMMON_LINE_POINTS}
+        points={lineCoordinates}
         stroke={stroke}
         strokeWidth={lineStrokeWidth}
       />
@@ -47,33 +54,45 @@ const Segment = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
         x={CIRCLE_COMMON_X_0}
         y={CIRCLE_COMMON_Y_0}
         stroke={stroke}
-        fill={fill}
+        fill={themeColor}
         radius={circleRadius}
-        strokeWidth={circleStrokeWidth}
         shadowBlur={circleShadowBlur}
+        strokeWidth={circleStrokeWidth}
       />
       <Circle
-        x={CIRCLE_COMMON_X_1}
-        y={CIRCLE_COMMON_Y_1}
+        x={circleCoordinates[0]}
+        y={circleCoordinates[1]}
         stroke={stroke}
-        fill={fill}
+        fill={themeColor}
         radius={circleRadius}
-        strokeWidth={circleStrokeWidth}
         shadowBlur={circleShadowBlur}
+        strokeWidth={strokeWidth}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onDragMove={handleDragMove}
+        draggable
+        dragBoundFunc={pos => checkBoundaries(pos)}
       />
       <Text
         x={CIRCLE_TEXT_X_0}
         y={CIRCLE_TEXT_Y_0}
         text="A"
         fontSize={fontSize}
-        fill={fill}
+        fill={themeColor}
       />
       <Text
-        x={CIRCLE_TEXT_X_1}
-        y={CIRCLE_TEXT_Y_1}
+        x={10}
+        y={15}
+        text={t('Segment title')}
+        fontSize={fontSize}
+        fill={themeColor}
+      />
+      <Text
+        x={circleCoordinates[0] + 30}
+        y={circleCoordinates[1]}
         text="B"
         fontSize={fontSize}
-        fill={fill}
+        fill={themeColor}
       />
     </Layer>
   </Stage>
@@ -81,7 +100,17 @@ const Segment = ({ scale, renderVerticalGrid, renderHorizontalGrid }) => (
 
 Segment.propTypes = {
   scale: PropTypes.number.isRequired,
+  t: PropTypes.func.isRequired,
+  themeColor: PropTypes.string.isRequired,
+  strokeWidth: PropTypes.number.isRequired,
+  handleDragMove: PropTypes.func.isRequired,
+  checkBoundaries: PropTypes.func.isRequired,
+  handleMouseEnter: PropTypes.func.isRequired,
+  handleMouseLeave: PropTypes.func.isRequired,
   renderVerticalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   renderHorizontalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  lineCoordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
+  circleCoordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
+
 export default Segment;
