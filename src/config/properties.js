@@ -4,4 +4,4 @@ export const fontSize = 40;
 export const circleRadius = 10;
 export const circleShadowBlur = 5;
 export const circleStrokeWidth = 5;
-export const lineStrokeWidth = 10;
+export const lineStrokeWidth = 5;

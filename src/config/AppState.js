@@ -5,6 +5,10 @@ export const AppState = {
   isMouseInside: false,
   lineCoordinates: [100, 400, 600, 200],
   circleCoordinates: [600, 200],
+
+  shapes: [], // list of dimensions to be rendered as shapes
+  isDrawing: false, // in the process of drawing a shape
+  isDrawingMode: false, // allow shapes to be drawn
 };
 
 export default AppState;
