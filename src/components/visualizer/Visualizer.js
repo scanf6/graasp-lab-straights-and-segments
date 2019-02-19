@@ -10,12 +10,9 @@ import Liner from './cases/Liner';
 import Segment from './cases/Segment';
 import SemiLine from './cases/SemiLine';
 import DrawLine from './practices/DrawLine';
+import DrawSegment from './practices/DrawSegment';
 import './Visualizer.css';
-import {
-  BLOCK_SNAP_SIZE,
-  CANVAS_VIRTUAL_WIDTH,
-  CANVAS_VIRTUAL_HEIGHT,
-} from '../../config/constants';
+import { BLOCK_SNAP_SIZE, CANVAS_VIRTUAL_WIDTH, CANVAS_VIRTUAL_HEIGHT } from '../../config/constants';
 
 export class Visualizer extends Component {
   state = AppState;
@@ -106,14 +103,16 @@ export class Visualizer extends Component {
     newX = x >= 1380 ? 1380 : newX;
     let newY = y < 20 ? 20 : y;
     newY = y >= 650 ? 650 : newY;
-    return {
-      x: newX,
-      y: newY,
-    };
+    return { x: newX, y: newY };
   };
 
-  handleClick = (e) => {
-    const { isDrawing, isDrawingMode, shapes } = this.state;
+  handleClick = (e, shape) => {
+    const {
+      isDrawing,
+      isDrawingMode,
+      shapes,
+      segmentShapes,
+    } = this.state;
     if (!isDrawingMode) return;
     // if we are drawing a shape, a click finishes the drawing
     if (isDrawing) {
@@ -123,7 +122,8 @@ export class Visualizer extends Component {
 
     // otherwise, add a new rectangle at the mouse position with 0 width and height,
     // and set isDrawing to true
-    const newShapes = shapes.slice();
+    let newShapes = shape === 'line' ? shapes : segmentShapes;
+    newShapes = newShapes.slice();
     newShapes.push({
       x: e.evt.layerX,
       y: e.evt.layerY,
@@ -131,38 +131,42 @@ export class Visualizer extends Component {
       height: e.evt.layerY,
     });
 
-    this.setState({
-      isDrawing: true,
-      shapes: newShapes,
-    });
+    this.setState({ isDrawing: true });
+    if (shape === 'line') this.setState({ shapes: newShapes });
+    if (shape === 'segment') this.setState({ segmentShapes: newShapes });
   };
 
-  handleMouseMove = (e) => {
-    const { isDrawing, isDrawingMode, shapes } = this.state;
+  handleMouseMove = (e, shape) => {
+    const {
+      isDrawing,
+      isDrawingMode,
+      shapes,
+      segmentShapes,
+    } = this.state;
     if (!isDrawingMode) return;
 
-    // update the current rectangle's width and height based on the mouse position
+    // update the current line's width and height based on the mouse position
     if (isDrawing) {
+      const newShapes = shape === 'line' ? shapes : segmentShapes;
       // get the current shape (the last shape in this.state.shapes)
-      const currShapeIndex = shapes.length - 1;
-      const currShape = shapes[currShapeIndex];
+      const currShapeIndex = newShapes.length - 1;
+      const currShape = newShapes[currShapeIndex];
 
-      const newShapesList = shapes.slice();
+      const newShapesList = newShapes.slice();
       newShapesList[currShapeIndex] = {
         x: currShape.x, // keep starting position the same
         y: currShape.y,
         width: e.evt.layerX, // new width and height
         height: e.evt.layerY,
       };
-
-      this.setState({ shapes: newShapesList });
+      if (shape === 'line') this.setState({ shapes: newShapesList });
+      if (shape === 'segment') this.setState({ segmentShapes: newShapesList });
     }
   };
 
-  handleCheckboxChange = () => {
-    // toggle drawing mode
+  handleDrawingMode = () => {
     const { isDrawingMode } = this.state;
-    this.setState({ isDrawingMode: !isDrawingMode });
+    this.setState({ isDrawingMode: !isDrawingMode }); // toggle drawing mode
   };
 
   render() {
@@ -178,6 +182,7 @@ export class Visualizer extends Component {
       lineCoordinates,
       circleCoordinates,
       shapes,
+      segmentShapes,
       isDrawingMode,
     } = this.state;
     const scale = Math.min(
@@ -187,20 +192,58 @@ export class Visualizer extends Component {
     return (
       <div className="visualizer-container">
         { showSegment ? (
-          <Segment
-            handleDragMove={this.handleDragMove}
-            handleMouseLeave={this.handleMouseLeave}
-            handleMouseEnter={this.handleMouseEnter}
-            renderVerticalGrid={this.renderVerticalGrid()}
-            renderHorizontalGrid={this.renderHorizontalGrid()}
-            lineCoordinates={lineCoordinates}
-            circleCoordinates={circleCoordinates}
-            checkBoundaries={this.checkBoundaries}
-            scale={scale}
-            strokeWidth={isMouseInside ? 10 : 5}
-            themeColor={themeColor}
-            t={t}
-          />
+          <div>
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  checked={isDrawingMode}
+                  onChange={this.handleDrawingMode}
+                  value="checkDrawer"
+                  style={{ color: themeColor }}
+                />
+              )}
+              label="Drawing Mode"
+            />
+            <Stage
+              width={window.innerWidth}
+              height={window.innerHeight}
+              onContentClick={e => this.handleClick(e, 'segment')}
+              onContentMouseMove={e => this.handleMouseMove(e, 'segment')}
+              scalex={scale}
+              scaley={scale}
+            >
+              <Layer>
+                {this.renderHorizontalGrid()}
+                {this.renderVerticalGrid()}
+                <Segment
+                  handleDragMove={this.handleDragMove}
+                  handleMouseLeave={this.handleMouseLeave}
+                  handleMouseEnter={this.handleMouseEnter}
+                  lineCoordinates={lineCoordinates}
+                  circleCoordinates={circleCoordinates}
+                  checkBoundaries={this.checkBoundaries}
+                  scale={scale}
+                  strokeWidth={isMouseInside ? 10 : 5}
+                  themeColor={themeColor}
+                  t={t}
+                />
+                {segmentShapes.map(shape => (
+                  <DrawSegment
+                    key={shape.id}
+                    x={shape.x}
+                    y={shape.y}
+                    width={shape.width}
+                    height={shape.height}
+                    isDrawingMode={isDrawingMode}
+                    t={t}
+                    themeColor={themeColor}
+                    circleCoordinates={circleCoordinates}
+                  />
+                ))
+                }
+              </Layer>
+            </Stage>
+          </div>
         )
           : ''
         }
@@ -210,25 +253,18 @@ export class Visualizer extends Component {
               control={(
                 <Checkbox
                   checked={isDrawingMode}
-                  onChange={this.handleCheckboxChange}
-                  value="checkedA"
+                  onChange={this.handleDrawingMode}
+                  value="checkDrawer"
                   style={{ color: themeColor }}
                 />
               )}
               label="Drawing Mode"
             />
-            <Liner
-              renderHorizontalGrid={this.renderHorizontalGrid()}
-              renderVerticalGrid={this.renderVerticalGrid()}
-              scale={scale}
-              themeColor={themeColor}
-              t={t}
-            />
             <Stage
               width={window.innerWidth}
               height={window.innerHeight}
-              onContentClick={this.handleClick}
-              onContentMouseMove={this.handleMouseMove}
+              onContentClick={e => this.handleClick(e, 'line')}
+              onContentMouseMove={e => this.handleMouseMove(e, 'line')}
               scalex={scale}
               scaley={scale}
             >
@@ -236,8 +272,6 @@ export class Visualizer extends Component {
                 {this.renderHorizontalGrid()}
                 {this.renderVerticalGrid()}
                 <Liner
-                  renderHorizontalGrid={this.renderHorizontalGrid()}
-                  renderVerticalGrid={this.renderVerticalGrid()}
                   scale={scale}
                   themeColor={themeColor}
                   t={t}
@@ -253,8 +287,6 @@ export class Visualizer extends Component {
                     scale={scale}
                     t={t}
                     themeColor={themeColor}
-                    handleClick={this.handleClick}
-                    handleMouseMove={this.handleMouseMove}
                   />
                 ))
                 }
