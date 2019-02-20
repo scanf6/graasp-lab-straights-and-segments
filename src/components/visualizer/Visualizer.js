@@ -209,8 +209,8 @@ export class Visualizer extends Component {
               height={window.innerHeight}
               onContentClick={e => this.handleClick(e, 'segment')}
               onContentMouseMove={e => this.handleMouseMove(e, 'segment')}
-              scalex={scale}
-              scaley={scale}
+              scaleX={scale}
+              scaleY={scale}
             >
               <Layer>
                 {this.renderHorizontalGrid()}
@@ -222,7 +222,6 @@ export class Visualizer extends Component {
                   lineCoordinates={lineCoordinates}
                   circleCoordinates={circleCoordinates}
                   checkBoundaries={this.checkBoundaries}
-                  scale={scale}
                   strokeWidth={isMouseInside ? 10 : 5}
                   themeColor={themeColor}
                   t={t}
@@ -265,14 +264,13 @@ export class Visualizer extends Component {
               height={window.innerHeight}
               onContentClick={e => this.handleClick(e, 'line')}
               onContentMouseMove={e => this.handleMouseMove(e, 'line')}
-              scalex={scale}
-              scaley={scale}
+              scaleX={scale}
+              scaleY={scale}
             >
               <Layer>
                 {this.renderHorizontalGrid()}
                 {this.renderVerticalGrid()}
                 <Liner
-                  scale={scale}
                   themeColor={themeColor}
                   t={t}
                 />
@@ -284,7 +282,6 @@ export class Visualizer extends Component {
                     width={shape.width}
                     height={shape.height}
                     isDrawingMode={isDrawingMode}
-                    scale={scale}
                     t={t}
                     themeColor={themeColor}
                   />
