@@ -19,3 +19,43 @@
 .SettingManager-container button {
   outline: 0;
 }
+h2 {
+  color: #555;
+  margin: 1rem 0;
+  text-align: left;
+  padding-left: 1rem;
+  font-size: 1.3rem;
+}
+.expression-container h2 {
+  padding-left: 0;
+}
+.description-content p {
+  color: #555;
+  font-size: 1.1rem;
+  padding: 0 1rem;
+  margin-bottom: 2rem;
+}
+.btn-outline-secondary {
+  color: #6c757d;
+  border-color: #6c757d;
+  width: 150px;
+}
+.use-cases {
+  text-align: center;
+  margin-top: 3rem;
+}
+.semi-line {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.separator-line {
+  margin-top: 2rem;
+  width: 70%;
+}
+.explanation-component {
+  color: #555;
+  font-size: 1.1rem;
+  padding: 0 1rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
