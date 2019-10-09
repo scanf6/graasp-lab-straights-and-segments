@@ -4,7 +4,7 @@ This lab allows the learner to be able to visualize and draw straights, semi-str
 
 This Lab was created using [Graasp App Starter React](https://github.com/react-epfl/graasp-app-starter-react)
 
-![image](https://github.com/graasp/graasp-lab-straights-and-segments/blob/develop/public/preview.png)
+![image](https://github.com/graasp/graasp-lab-straights-and-segments/blob/master/public/preview.png)
 
 ## Quick Start
 
