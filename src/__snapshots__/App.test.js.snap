@@ -69,10 +69,8 @@ ShallowWrapper {
     "nodeType": "host",
     "props": Object {
       "children": Array [
-        <img
-          alt="Logo"
+        <ReactComponent
           className="App-loader-logo"
-          src="GraaspLogo.svg"
         />,
         <Progress
           barClassName="App-loader-progress-bar"
@@ -89,15 +87,13 @@ ShallowWrapper {
       Object {
         "instance": null,
         "key": undefined,
-        "nodeType": "host",
+        "nodeType": "function",
         "props": Object {
-          "alt": "Logo",
           "className": "App-loader-logo",
-          "src": "GraaspLogo.svg",
         },
         "ref": null,
         "rendered": null,
-        "type": "img",
+        "type": [Function],
       },
       Object {
         "instance": null,
@@ -124,10 +120,8 @@ ShallowWrapper {
       "nodeType": "host",
       "props": Object {
         "children": Array [
-          <img
-            alt="Logo"
+          <ReactComponent
             className="App-loader-logo"
-            src="GraaspLogo.svg"
           />,
           <Progress
             barClassName="App-loader-progress-bar"
@@ -144,15 +138,13 @@ ShallowWrapper {
         Object {
           "instance": null,
           "key": undefined,
-          "nodeType": "host",
+          "nodeType": "function",
           "props": Object {
-            "alt": "Logo",
             "className": "App-loader-logo",
-            "src": "GraaspLogo.svg",
           },
           "ref": null,
           "rendered": null,
-          "type": "img",
+          "type": [Function],
         },
         Object {
           "instance": null,
