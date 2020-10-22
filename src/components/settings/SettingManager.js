@@ -71,13 +71,14 @@ export class SettingManager extends Component {
 
   postMessage = (data) => {
     const message = JSON.stringify(data);
-    console.log('message', message);
+    // console.log('message', message);
     if (document.postMessage) {
       document.postMessage(message, '*');
     } else if (window.postMessage) {
       window.postMessage(message, '*');
     } else {
-      console.error('unable to find postMessage');
+      window.postMessage('unable to find postMessage', '*');
+      // console.error('unable to find postMessage');
     }
   };
 

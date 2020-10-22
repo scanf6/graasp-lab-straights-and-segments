@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   Circle,
   Group,
-  Line,
   Text,
 } from 'react-konva';
 import {
@@ -12,7 +11,6 @@ import {
   circleRadius,
   circleShadowBlur,
   circleStrokeWidth,
-  lineStrokeWidth,
 } from '../../../config/properties';
 import {
   CIRCLE_COMMON_X_0,
@@ -25,19 +23,19 @@ const Segment = ({
   handleDragMove,
   handleMouseEnter,
   handleMouseLeave,
-  lineCoordinates,
   circleCoordinates,
+  circle3Coordinates,
   checkBoundaries,
   strokeWidth,
   themeColor,
   t,
 }) => (
   <Group>
-    <Line
+    {/* <Line
       points={lineCoordinates}
       stroke={stroke}
       strokeWidth={lineStrokeWidth}
-    />
+    /> */}
     <Circle
       x={CIRCLE_COMMON_X_0}
       y={CIRCLE_COMMON_Y_0}
@@ -58,7 +56,19 @@ const Segment = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onDragMove={handleDragMove}
-      draggable
+      dragBoundFunc={pos => checkBoundaries(pos)}
+    />
+    <Circle
+      x={circle3Coordinates[0]}
+      y={circle3Coordinates[1]}
+      stroke={stroke}
+      fill={themeColor}
+      radius={circleRadius}
+      shadowBlur={circleShadowBlur}
+      strokeWidth={strokeWidth}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onDragMove={handleDragMove}
       dragBoundFunc={pos => checkBoundaries(pos)}
     />
     <Text
@@ -82,6 +92,13 @@ const Segment = ({
       fontSize={fontSize}
       fill={themeColor}
     />
+    <Text
+      x={circle3Coordinates[0] + 30}
+      y={circle3Coordinates[1]}
+      text="C"
+      fontSize={fontSize}
+      fill={themeColor}
+    />
   </Group>
 );
 
@@ -93,8 +110,8 @@ Segment.propTypes = {
   checkBoundaries: PropTypes.func.isRequired,
   handleMouseEnter: PropTypes.func.isRequired,
   handleMouseLeave: PropTypes.func.isRequired,
-  lineCoordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
   circleCoordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
+  circle3Coordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
 export default Segment;

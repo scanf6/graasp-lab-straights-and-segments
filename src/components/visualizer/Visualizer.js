@@ -1,72 +1,124 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { Line, Stage, Layer } from 'react-konva';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import { AppState } from '../../config/AppState';
-import Liner from './cases/Liner';
-import Segment from './cases/Segment';
-import SemiLine from './cases/SemiLine';
-import DrawLine from './practices/DrawLine';
-import DrawSegment from './practices/DrawSegment';
 import './Visualizer.css';
-import { BLOCK_SNAP_SIZE, CANVAS_VIRTUAL_WIDTH, CANVAS_VIRTUAL_HEIGHT } from '../../config/constants';
+import swal from 'sweetalert';
+import { isEqual } from 'lodash';
+import PropTypes from 'prop-types';
+import { Button } from 'reactstrap';
+import { connect } from 'react-redux';
+import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next';
+import {
+  Line, Stage, Layer, Circle,
+} from 'react-konva';
+import { AppState } from '../../config/AppState';
+
+import Liner from './cases/Liner';
+
+import {
+  BLOCK_SNAP_SIZE,
+  CANVAS_VIRTUAL_WIDTH,
+  CANVAS_VIRTUAL_HEIGHT,
+} from '../../config/constants';
+
+const traceCondition = (condition, then, otherwise) => (condition ? then : otherwise);
+const initialState = {
+  drawedLinePoints: {
+    startPoint: null,
+    endPoint: null,
+  },
+  lineDrawingFinished: true,
+  drawedLineEquation: {
+    a: null,
+    b: null,
+  },
+};
 
 export class Visualizer extends Component {
-  state = AppState;
+  constructor(props) {
+    super(props);
+    this.hackCircleRef = React.createRef();
+    this.state = {
+      ...AppState,
+      ...initialState,
+    };
+  }
+
+  componentDidUpdate(props) {
+    // Reset the drawing area when we switch between line, semi-line and segment
+    const { simulation } = this.props;
+    if (!isEqual(props.simulation, simulation)) {
+      this.updateSimulation();
+    }
+  }
+
+  updateSimulation = () => {
+    this.setState({
+      drawedLinePoints: {
+        startPoint: null,
+        endPoint: null,
+      },
+      lineDrawingFinished: true,
+      drawedLineEquation: {
+        a: null,
+        b: null,
+      },
+    });
+  }
 
   renderVerticalGrid = () => {
     const width = window.innerWidth;
-    const height = (4 / 5) * (window.innerHeight);
+    const height = (4 / 5) * window.innerHeight;
     const lines = [];
     const grouped = width / BLOCK_SNAP_SIZE;
     for (let i = 0; i < grouped; i += 1) {
       lines.push(
         <Line
           key={i}
-          points={
-            [
-              Math.round(i * BLOCK_SNAP_SIZE) + 1, 0,
-              Math.round(i * BLOCK_SNAP_SIZE) + 1, height,
-            ]
-          }
+          points={[
+            Math.round(i * BLOCK_SNAP_SIZE) + 1,
+            0,
+            Math.round(i * BLOCK_SNAP_SIZE) + 1,
+            height,
+          ]}
           stroke="#CCC"
           strokeWidth={1}
         />,
       );
     }
     return lines;
-  }
+  };
 
   renderHorizontalGrid = () => {
     const width = window.innerWidth;
-    const height = (4 / 5) * (window.innerHeight);
+    const height = (4 / 5) * window.innerHeight;
     const lines = [];
     const grouped = height / BLOCK_SNAP_SIZE;
     for (let j = 0; j < grouped; j += 1) {
       lines.push(
         <Line
           key={j}
-          points={[0, Math.round(j * BLOCK_SNAP_SIZE), width, Math.round(j * BLOCK_SNAP_SIZE)]}
+          points={[
+            0,
+            Math.round(j * BLOCK_SNAP_SIZE),
+            width,
+            Math.round(j * BLOCK_SNAP_SIZE),
+          ]}
           stroke="#CCC"
           strokeWidth={1}
         />,
       );
     }
     return lines;
-  }
+  };
 
   handleMouseEnter = () => {
     document.body.style.cursor = 'pointer';
     this.setState({ isMouseInside: true });
-  }
+  };
 
   handleMouseLeave = () => {
     document.body.style.cursor = 'default';
     this.setState({ isMouseInside: false });
-  }
+  };
 
   handleDragMove = (event) => {
     const { lineCoordinates, circleCoordinates } = this.state;
@@ -85,7 +137,7 @@ export class Visualizer extends Component {
     if (newX > 10 && newX < 1400 && newY > 10 && newY < 650) {
       this.setState({ lineCoordinates: updatedLineCoordinates });
     }
-  }
+  };
 
   updateCircleCoordinates = (newCircleCoordinates, event) => {
     const newX = event.target.x();
@@ -96,7 +148,7 @@ export class Visualizer extends Component {
       updatedCircleCoordinates[1] = newY;
       this.setState({ circleCoordinates: updatedCircleCoordinates });
     }
-  }
+  };
 
   checkBoundaries = ({ x, y }) => {
     let newX = x < 20 ? 20 : x;
@@ -106,84 +158,345 @@ export class Visualizer extends Component {
     return { x: newX, y: newY };
   };
 
+  getLineEquation = (firstPoint, secondPoint) => {
+    // y = ax + b
+    const a = (secondPoint[1] - firstPoint[1]) / (secondPoint[0] - firstPoint[0]);
+    const b = firstPoint[1] - a * firstPoint[0];
+    this.setState({ drawedLineEquation: { a, b } });
+  };
+
+  isPointOnLine = (pointCoordinates) => {
+    // y = ax + b
+    const { drawedLineEquation } = this.state;
+    if (
+      Math.abs(
+        pointCoordinates[1]
+          - (drawedLineEquation.a * pointCoordinates[0] + drawedLineEquation.b),
+      ) <= 10
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  snapToClosestPoint = (clickedPosition) => {
+    const {
+      circle0Coordinates,
+      circleCoordinates,
+      circle3Coordinates,
+    } = this.state;
+    if (
+      Math.abs(clickedPosition[0] - circle0Coordinates[0]) <= 12
+      && Math.abs(clickedPosition[1] - circle0Coordinates[1]) <= 12
+    ) {
+      return circle0Coordinates;
+    } if (
+      Math.abs(clickedPosition[0] - circleCoordinates[0]) <= 12
+      && Math.abs(clickedPosition[1] - circleCoordinates[1]) <= 12
+    ) {
+      return circleCoordinates;
+    } if (
+      Math.abs(clickedPosition[0] - circle3Coordinates[0]) <= 12
+      && Math.abs(clickedPosition[1] - circle3Coordinates[1]) <= 12
+    ) {
+      return circle3Coordinates;
+    } return clickedPosition;
+  };
+
   handleClick = (e, shape) => {
     const {
-      isDrawing,
-      isDrawingMode,
-      shapes,
-      segmentShapes,
+      drawedLinePoints: { startPoint, endPoint },
     } = this.state;
-    if (!isDrawingMode) return;
-    // if we are drawing a shape, a click finishes the drawing
-    if (isDrawing) {
-      this.setState({ isDrawing: !isDrawing });
+
+    if (shape === 'line') {
+      const node = e.currentTarget;
+      const { drawedLinePoints } = this.state;
+      const { x, y } = this.relativeNodePosition(node);
+      // Snap clicked point to closest present point if any
+      const clickedPosition = this.snapToClosestPoint([x, y]);
+
+      if (startPoint && endPoint) {
+        this.setState({ lineDrawingFinished: true });
+        // Calculate line equation here
+        const newEndPoint = [
+          endPoint[0] + startPoint[0],
+          endPoint[1] + startPoint[1],
+        ];
+        this.getLineEquation(startPoint, newEndPoint);
+      } else {
+        this.setState({
+          lineDrawingFinished: false,
+          drawedLinePoints: {
+            ...drawedLinePoints,
+            startPoint: clickedPosition,
+            endPoint: [0, 0],
+          },
+        });
+      }
+    }
+    return null;
+  };
+
+  relativeNodePosition = (node) => {
+    const transform = node.getAbsoluteTransform().copy();
+    transform.invert();
+    const pos = node.getStage().getPointerPosition();
+    const { x, y } = transform.point(pos);
+    return { x, y };
+  };
+
+  handleMouseMove = (e) => {
+    const {
+      lineDrawingFinished,
+      circle0Coordinates,
+      circleCoordinates,
+      circle3Coordinates,
+      drawedLinePoints,
+    } = this.state;
+    const { startPoint } = drawedLinePoints;
+    if (startPoint && !lineDrawingFinished) {
+      const node = this.hackCircleRef.current;
+      const { x, y } = this.relativeNodePosition(node);
+
+      const nodeAbsolute = e.currentTarget;
+      const { x: xAbs, y: yAbs } = this.relativeNodePosition(nodeAbsolute);
+      const finishedPoint = this.snapToClosestPoint([xAbs, yAbs]);
+      this.setState({
+        drawedLinePoints: {
+          ...drawedLinePoints,
+          endPoint:
+            finishedPoint === circle0Coordinates // COULD CAUSE A PROBLEME MAYBE
+            || finishedPoint === circleCoordinates // COULD CAUSE A PROBLEME MAYBE
+            || finishedPoint === circle3Coordinates // COULD CAUSE A PROBLEME MAYBE
+              ? [
+                finishedPoint[0] - startPoint[0],
+                finishedPoint[1] - startPoint[1],
+              ]
+              : [x, y],
+        },
+      });
+    }
+  };
+
+  checkResults = () => {
+    const { simulation } = this.props;
+    const { showLine, showSemiLine, showSegment } = simulation;
+    const {
+      drawedLinePoints,
+      circle0Coordinates,
+      circleCoordinates,
+      circle3Coordinates,
+    } = this.state;
+    const { startPoint, endPoint } = drawedLinePoints;
+
+    if (!startPoint || !endPoint) {
+      const shouldTrace = traceCondition(showLine, 'une droite', '')
+      || traceCondition(showSemiLine, 'une demi-droite', '')
+      || traceCondition(showSegment, 'un segment', '');
+      /* const shouldTrace = showLine ?
+       'une droite' : showSemiLine ? 'une demi-droite' : showSegment ? 'un segment' : ''; */
+      swal({
+        title: 'ERREUR!',
+        text: `Veuillez tracer ${shouldTrace}!`,
+        icon: 'error',
+        button: 'Super!',
+      });
       return;
     }
 
-    // otherwise, add a new rectangle at the mouse position with 0 width and height,
-    // and set isDrawing to true
-    let newShapes = shape === 'line' ? shapes : segmentShapes;
-    newShapes = newShapes.slice();
-    newShapes.push({
-      x: e.evt.layerX,
-      y: e.evt.layerY,
-      width: e.evt.layerX,
-      height: e.evt.layerY,
-    });
+    const newEndPoint = [
+      endPoint[0] + startPoint[0],
+      endPoint[1] + startPoint[1],
+    ];
 
-    this.setState({ isDrawing: true });
-    if (shape === 'line') this.setState({ shapes: newShapes });
-    if (shape === 'segment') this.setState({ segmentShapes: newShapes });
-  };
+    if (showLine) {
+      // Handling result check for line
+      if (
+        isEqual(startPoint, circle0Coordinates)
+        || isEqual(startPoint, circleCoordinates)
+        || isEqual(startPoint, circle3Coordinates)
+      ) {
+        // alert("FAUX: Ceci n'est pas une droite!");
+        swal({
+          title: 'FAUX!',
+          text: "Ceci n'est pas une droite!",
+          icon: 'error',
+          button: 'Ok!',
+        });
+        return;
+      }
 
-  handleMouseMove = (e, shape) => {
-    const {
-      isDrawing,
-      isDrawingMode,
-      shapes,
-      segmentShapes,
-    } = this.state;
-    if (!isDrawingMode) return;
+      if (
+        isEqual(newEndPoint, circle0Coordinates)
+        || isEqual(
+          [endPoint[0] + startPoint[0], endPoint[1] + startPoint[1]],
+          circleCoordinates,
+        )
+        || isEqual(
+          [endPoint[0] + startPoint[0], endPoint[1] + startPoint[1]],
+          circle3Coordinates,
+        )
+      ) {
+        // alert("FAUX: Ceci n'est pas une droite!");
+        swal({
+          title: 'FAUX!',
+          text: "Ceci n'est pas une droite!",
+          icon: 'error',
+          button: 'Ok!',
+        });
+        return;
+      }
 
-    // update the current line's width and height based on the mouse position
-    if (isDrawing) {
-      const newShapes = shape === 'line' ? shapes : segmentShapes;
-      // get the current shape (the last shape in this.state.shapes)
-      const currShapeIndex = newShapes.length - 1;
-      const currShape = newShapes[currShapeIndex];
+      if (
+        !this.isPointOnLine(circle0Coordinates)
+        && !this.isPointOnLine(circleCoordinates)
+        && !this.isPointOnLine(circle3Coordinates)
+      ) {
+        // alert("Veuillez utilisez les points prevues sur le plan!");
+        swal('Erreur!', 'Veuillez utilisez les points prevues sur le plan!', 'error');
+        return;
+      }
 
-      const newShapesList = newShapes.slice();
-      newShapesList[currShapeIndex] = {
-        x: currShape.x, // keep starting position the same
-        y: currShape.y,
-        width: e.evt.layerX, // new width and height
-        height: e.evt.layerY,
-      };
-      if (shape === 'line') this.setState({ shapes: newShapesList });
-      if (shape === 'segment') this.setState({ segmentShapes: newShapesList });
+      if (
+        (this.isPointOnLine(circle0Coordinates)
+          && this.isPointOnLine(circleCoordinates))
+        || (this.isPointOnLine(circle0Coordinates)
+          && this.isPointOnLine(circle3Coordinates))
+        || (this.isPointOnLine(circleCoordinates)
+          && this.isPointOnLine(circle3Coordinates))
+      ) {
+        // alert("BRAVO: Vous venez de tracer une droite!");
+        swal({
+          title: 'BRAVO!',
+          text: 'Vous venez de tracer une droite!',
+          icon: 'success',
+          button: 'Super!',
+        });
+      } else {
+        // alert("Veuillez utiliser deux points du plan!");
+        swal('Erreur!', 'Veuillez utiliser deux points du plan!', 'error');
+      }
+    } else if (showSemiLine) {
+      // Handling result check for semi-line
+      if (
+        (isEqual(startPoint, circle0Coordinates)
+          && isEqual(newEndPoint, circleCoordinates))
+        || (isEqual(startPoint, circle0Coordinates)
+          && isEqual(newEndPoint, circle3Coordinates))
+        || (isEqual(startPoint, circleCoordinates)
+          && isEqual(newEndPoint, circle0Coordinates))
+        || (isEqual(startPoint, circleCoordinates)
+          && isEqual(newEndPoint, circle3Coordinates))
+        || (isEqual(startPoint, circle3Coordinates)
+          && isEqual(newEndPoint, circle0Coordinates))
+        || (isEqual(startPoint, circle3Coordinates)
+          && isEqual(newEndPoint, circleCoordinates))
+      ) {
+        // alert("FAUX: Ceci n'est pas une demi-droite!");
+        swal({
+          title: 'FAUX!',
+          text: "Ceci n'est pas une demi-droite!",
+          icon: 'error',
+          button: 'Ok!',
+        });
+        return;
+      }
+
+      if (
+        (isEqual(startPoint, circle0Coordinates)
+          && (this.isPointOnLine(circleCoordinates)
+            || this.isPointOnLine(circle3Coordinates)))
+        || (isEqual(startPoint, circleCoordinates)
+          && (this.isPointOnLine(circle0Coordinates)
+            || this.isPointOnLine(circle3Coordinates)))
+        || (isEqual(startPoint, circle3Coordinates)
+          && (this.isPointOnLine(circle0Coordinates)
+            || this.isPointOnLine(circleCoordinates)))
+      ) {
+        // alert("BRAVO: Vous venez de tracer une demi-droite!");
+        swal({
+          title: 'BRAVO!',
+          text: 'Vous venez de tracer une demi-droite!',
+          icon: 'success',
+          button: 'Super!',
+        });
+      } else if (
+        (isEqual(newEndPoint, circle0Coordinates)
+          && (this.isPointOnLine(circleCoordinates)
+            || this.isPointOnLine(circle3Coordinates)))
+        || (isEqual(newEndPoint, circleCoordinates)
+          && (this.isPointOnLine(circle0Coordinates)
+            || this.isPointOnLine(circle3Coordinates)))
+        || (isEqual(newEndPoint, circle3Coordinates)
+          && (this.isPointOnLine(circle0Coordinates)
+            || this.isPointOnLine(circleCoordinates)))
+      ) {
+        // alert("BRAVO: Vous venez de tracer une demi-droite!");
+        swal({
+          title: 'BRAVO!!',
+          text: 'Vous venez de tracer une demi-droite!',
+          icon: 'success',
+          button: 'Super!',
+        });
+      } else {
+        // alert("FAUX: Ceci n'est pas une demi-droite!");
+        swal({
+          title: 'FAUX!',
+          text: "Ceci n'est pas une demi-droite!",
+          icon: 'error',
+          button: 'Ok!',
+        });
+      }
+    } else if (showSegment) {
+      // Handling result check for semi-line
+      if (
+        (isEqual(startPoint, circle0Coordinates)
+          && isEqual(newEndPoint, circleCoordinates))
+        || (isEqual(startPoint, circle0Coordinates)
+          && isEqual(newEndPoint, circle3Coordinates))
+        || (isEqual(startPoint, circleCoordinates)
+          && isEqual(newEndPoint, circle0Coordinates))
+        || (isEqual(startPoint, circleCoordinates)
+          && isEqual(newEndPoint, circle3Coordinates))
+        || (isEqual(startPoint, circle3Coordinates)
+          && isEqual(newEndPoint, circle0Coordinates))
+        || (isEqual(startPoint, circle3Coordinates)
+          && isEqual(newEndPoint, circleCoordinates))
+      ) {
+        // alert("BRAVO: Vous avez tracer un segment!");
+        swal({
+          title: 'BRAVO!',
+          text: 'Vous venez de tracer un segment!',
+          icon: 'success',
+          button: 'Super!',
+        });
+      } else {
+        // alert("FAUX: Ceci n'est pas un segment!");
+        swal({
+          title: 'FAUX!',
+          text: "Ceci n'est pas un segment!",
+          icon: 'error',
+          button: 'Ok!',
+        });
+      }
     }
   };
 
-  handleDrawingMode = () => {
-    const { isDrawingMode } = this.state;
-    this.setState({ isDrawingMode: !isDrawingMode }); // toggle drawing mode
-  };
+  reset = () => {
+    this.setState({ ...initialState });
+  }
 
   render() {
     const {
-      showLine,
-      showSegment,
-      showSemiLine,
-      themeColor,
-      t,
+      showLine, showSegment, showSemiLine, themeColor, t,
     } = this.props;
     const {
       isMouseInside,
       lineCoordinates,
+      circle0Coordinates,
       circleCoordinates,
-      shapes,
-      segmentShapes,
-      isDrawingMode,
+      circle3Coordinates,
+      drawedLinePoints: { startPoint, endPoint },
     } = this.state;
     const scale = Math.min(
       window.innerWidth / CANVAS_VIRTUAL_WIDTH,
@@ -191,120 +504,82 @@ export class Visualizer extends Component {
     );
     return (
       <div className="visualizer-container">
-        { showSegment ? (
-          <div>
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  checked={isDrawingMode}
-                  onChange={this.handleDrawingMode}
-                  value="checkDrawer"
-                  style={{ color: themeColor }}
-                />
-              )}
-              label="Drawing Mode"
-            />
-            <Stage
-              width={window.innerWidth}
-              height={window.innerHeight}
-              onContentClick={e => this.handleClick(e, 'segment')}
-              onContentMouseMove={e => this.handleMouseMove(e, 'segment')}
-              scaleX={scale}
-              scaleY={scale}
-            >
-              <Layer>
-                {this.renderHorizontalGrid()}
-                {this.renderVerticalGrid()}
-                <Segment
-                  handleDragMove={this.handleDragMove}
-                  handleMouseLeave={this.handleMouseLeave}
-                  handleMouseEnter={this.handleMouseEnter}
-                  lineCoordinates={lineCoordinates}
-                  circleCoordinates={circleCoordinates}
-                  checkBoundaries={this.checkBoundaries}
-                  strokeWidth={isMouseInside ? 10 : 5}
-                  themeColor={themeColor}
-                  t={t}
-                />
-                {segmentShapes.map(shape => (
-                  <DrawSegment
-                    key={shape.id}
-                    x={shape.x}
-                    y={shape.y}
-                    width={shape.width}
-                    height={shape.height}
-                    isDrawingMode={isDrawingMode}
-                    t={t}
-                    themeColor={themeColor}
-                    circleCoordinates={circleCoordinates}
-                  />
-                ))
-                }
-              </Layer>
-            </Stage>
+        <div>
+          <div className="mb-2">
+            Veuillez tracer
+            { traceCondition(showLine, 'une droite', '')
+             || traceCondition(showSemiLine, 'une demi-droite', '')
+             || traceCondition(showSegment, 'un segment', '')
+            }
+            { /* showLine ?
+            'une droite' : showSemiLine ? 'une demi-droite' : showSegment ? 'un segment' : '' */}
+            <span>
+              <Button
+                className="ml-2"
+                size="tiny"
+                outline
+                color="success"
+                onClick={this.checkResults}
+              >
+                {t('Verifier')}
+              </Button>
+            </span>
+            <span>
+              <Button
+                className="ml-2"
+                size="tiny"
+                outline
+                color="danger"
+                onClick={this.reset}
+              >
+                {t('Reprendre')}
+              </Button>
+            </span>
           </div>
-        )
-          : ''
-        }
-        { showLine ? (
-          <div>
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  checked={isDrawingMode}
-                  onChange={this.handleDrawingMode}
-                  value="checkDrawer"
-                  style={{ color: themeColor }}
-                />
-              )}
-              label="Drawing Mode"
-            />
-            <Stage
-              width={window.innerWidth}
-              height={window.innerHeight}
-              onContentClick={e => this.handleClick(e, 'line')}
-              onContentMouseMove={e => this.handleMouseMove(e, 'line')}
-              scaleX={scale}
-              scaleY={scale}
-            >
-              <Layer>
-                {this.renderHorizontalGrid()}
-                {this.renderVerticalGrid()}
-                <Liner
-                  themeColor={themeColor}
-                  t={t}
-                />
-                {shapes.map(shape => (
-                  <DrawLine
-                    key={shape.id}
-                    x={shape.x}
-                    y={shape.y}
-                    width={shape.width}
-                    height={shape.height}
-                    isDrawingMode={isDrawingMode}
-                    t={t}
-                    themeColor={themeColor}
+          <Stage
+            width={window.innerWidth}
+            height={window.innerHeight}
+            onContentClick={e => this.handleClick(e, 'line')}
+            onMouseMove={e => this.handleMouseMove(e, 'line')}
+            scaleX={scale}
+            scaleY={scale}
+          >
+            <Layer>
+              {this.renderHorizontalGrid()}
+              {this.renderVerticalGrid()}
+              <Liner
+                handleDragMove={this.handleDragMove}
+                handleMouseLeave={this.handleMouseLeave}
+                handleMouseEnter={this.handleMouseEnter}
+                lineCoordinates={lineCoordinates}
+                circle0Coordinates={circle0Coordinates}
+                circleCoordinates={circleCoordinates}
+                circle3Coordinates={circle3Coordinates}
+                checkBoundaries={this.checkBoundaries}
+                strokeWidth={isMouseInside ? 10 : 5}
+                themeColor={themeColor}
+                t={t}
+              />
+              {/* !!!!!!!!!!!!!!!!!!!! HERE WILL BE PLACED THE LINES !!!!!!!!!!!!!!!!!!! */}
+              {startPoint && (
+                <>
+                  <Circle
+                    ref={this.hackCircleRef}
+                    x={startPoint[0]}
+                    y={startPoint[1]}
+                    radius={0} // This is a hack, to set the endPoint position x, y
                   />
-                ))
-                }
-              </Layer>
-            </Stage>
-          </div>
-        )
-          : ''
-        }
-        { showSemiLine ? (
-          <SemiLine
-            renderHorizontalGrid={this.renderHorizontalGrid()}
-            renderVerticalGrid={this.renderVerticalGrid()}
-            scale={scale}
-            strokeWidth={isMouseInside ? 10 : 5}
-            themeColor={themeColor}
-            t={t}
-          />
-        )
-          : ''
-        }
+                  <Line
+                    stroke="rgb(0, 150, 136)"
+                    x={startPoint[0]}
+                    y={startPoint[1]}
+                    points={[0, 0, ...endPoint]}
+                  />
+                </>
+              )}
+            </Layer>
+          </Stage>
+        </div>
       </div>
     );
   }
@@ -316,9 +591,15 @@ Visualizer.propTypes = {
   showSemiLine: PropTypes.bool.isRequired,
   themeColor: PropTypes.string.isRequired,
   t: PropTypes.func.isRequired,
+  simulation: PropTypes.shape({
+    showLine: PropTypes.bool.isRequired,
+    showSemiLine: PropTypes.bool.isRequired,
+    showSegment: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 
 const mapStateToProps = state => ({
+  simulation: state.simulation,
   themeColor: state.layout.themeColor,
   showLine: state.simulation.showLine,
   showSegment: state.simulation.showSegment,

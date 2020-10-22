@@ -1,13 +1,13 @@
 {
   "translations" : {
-    "Lab Title": "Titre du Labo à modifier",
+    "Lab Title": "Titre du Labo Г  modifier",
     "Observe": "Observer",
     "Test": "Tester",
-    "Coming Soon!": "Bientôt disponible!",
+    "Coming Soon!": "BientГґt disponible!",
     "Choose your panel color": "Choisis la couleur de panel",
     "Language": "Langue",
     "Display Lab title": "Afficher le titre du Lab",
-    "Lab Explanation": "Ce laboratoire permet à l'apprenant de pouvoir visualiser et dessiner des lignes droites, semi-droites et des segments.",
+    "Lab Explanation": "Ce laboratoire permet Г  l'apprenant de pouvoir visualiser et dessiner des lignes droites, semi-droites et des segments.",
     "Line": "Ligne",
     "Line title": "Une Droite: (AB)",
     "Semi Line title": "Une Demi-Droite: [AB)",
@@ -15,10 +15,12 @@
     "Description": "Description",
     "Semi-line": "Demi-droite",
     "Segment": "Segment",
+    "Check": "Verifier",
+    "Restart": "Reprendre",
     "Straights and Segments": "Droites, Demi-droites et Segments",
     "Expression": "Expression",
-    "Line Explanation": "Une Ligne ou Droite, est une figure géométrique formé de points alignés, et illimitée des deux côtés.",
-    "SemiLine Explanation": "Une Demi-Droite, est une portion de droite limitée par un point appelé  Origine. Dans notre cas, la demi-droite commence par le point  A, et est limitée par le point  B.",
-    "Segment Explanation": "Un Segment, est une portion de droite délimitée par deux points appelés extrémités du segment. Dans notre cas, le Segment est limité par le point  A, et par le point  B."
+    "Line Explanation": "Une Ligne ou Droite, est une figure gГ©omГ©trique formГ© de points alignГ©s, et illimitГ©e des deux cГґtГ©s.",
+    "SemiLine Explanation": "Une Demi-Droite, est une portion de droite limitГ©e par un point appelГ©  Origine. Dans notre cas, la demi-droite commence par le point  A, et est limitГ©e par le point  B.",
+    "Segment Explanation": "Un Segment, est une portion de droite dГ©limitГ©e par deux points appelГ©s extrГ©mitГ©s du segment. Dans notre cas, le Segment est limitГ© par le point  A, et par le point  B."
   }
 }

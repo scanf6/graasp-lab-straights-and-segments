@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   Circle,
   Layer,
-  Line,
   Text,
   Stage,
 } from 'react-konva';
@@ -12,7 +11,6 @@ import {
   fontSize,
   circleRadius,
   circleShadowBlur,
-  lineStrokeWidth,
 } from '../../../config/properties';
 import {
   CIRCLE_COMMON_X_0,
@@ -23,14 +21,18 @@ import {
   CIRCLE_TEXT_X_1,
   CIRCLE_TEXT_Y_0,
   CIRCLE_TEXT_Y_1,
-  COMMON_LINE_POINTS,
 } from '../../../config/coordinates';
 
 const SemiLine = ({
+  handleDragMove,
+  handleMouseEnter,
+  handleMouseLeave,
+  checkBoundaries,
   scale,
   renderVerticalGrid,
   renderHorizontalGrid,
   strokeWidth,
+  circle3Coordinates,
   themeColor,
   t,
 }) => (
@@ -43,7 +45,7 @@ const SemiLine = ({
     <Layer>
       {renderHorizontalGrid}
       {renderVerticalGrid}
-      <Line
+      {/* <Line
         points={COMMON_LINE_POINTS}
         stroke={stroke}
         strokeWidth={lineStrokeWidth}
@@ -52,7 +54,7 @@ const SemiLine = ({
         points={[600, 200, 800, 120]}
         stroke={stroke}
         strokeWidth={lineStrokeWidth}
-      />
+      /> */}
       <Circle
         x={CIRCLE_COMMON_X_0}
         y={CIRCLE_COMMON_Y_0}
@@ -70,6 +72,19 @@ const SemiLine = ({
         radius={circleRadius}
         strokeWidth={strokeWidth}
         shadowBlur={circleShadowBlur}
+      />
+      <Circle
+        x={circle3Coordinates[0]}
+        y={circle3Coordinates[1]}
+        stroke={stroke}
+        fill={themeColor}
+        radius={circleRadius}
+        shadowBlur={circleShadowBlur}
+        strokeWidth={strokeWidth}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onDragMove={handleDragMove}
+        dragBoundFunc={pos => checkBoundaries(pos)}
       />
       <Text
         x={10}
@@ -92,6 +107,13 @@ const SemiLine = ({
         fontSize={fontSize}
         fill={themeColor}
       />
+      <Text
+        x={circle3Coordinates[0] + 30}
+        y={circle3Coordinates[1]}
+        text="C"
+        fontSize={fontSize}
+        fill={themeColor}
+      />
     </Layer>
   </Stage>
 );
@@ -103,6 +125,11 @@ SemiLine.propTypes = {
   themeColor: PropTypes.string.isRequired,
   renderVerticalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   renderHorizontalGrid: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  handleDragMove: PropTypes.func.isRequired,
+  handleMouseEnter: PropTypes.func.isRequired,
+  handleMouseLeave: PropTypes.func.isRequired,
+  checkBoundaries: PropTypes.func.isRequired,
+  circle3Coordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
 export default SemiLine;

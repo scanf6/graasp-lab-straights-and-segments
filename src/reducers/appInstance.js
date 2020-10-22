@@ -16,7 +16,7 @@ export default (state = INITIAL_STATE, { payload, type }) => {
     case PATCH_APP_INSTANCE_FAILED:
     case GET_APP_INSTANCE_FAILED:
       // show error to user
-      alert(payload);
+      // alert(payload);
       return state;
 
     default:
