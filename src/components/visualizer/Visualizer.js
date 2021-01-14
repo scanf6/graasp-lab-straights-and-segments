@@ -506,10 +506,10 @@ export class Visualizer extends Component {
       <div className="visualizer-container">
         <div>
           <div className="mb-2">
-            Veuillez tracer
-            { traceCondition(showLine, 'une droite', '')
-             || traceCondition(showSemiLine, 'une demi-droite', '')
-             || traceCondition(showSegment, 'un segment', '')
+            {t('Please draw ')}
+            { t(traceCondition(showLine, 'a line', ''))
+             || t(traceCondition(showSemiLine, 'a semi-line', ''))
+             || t(traceCondition(showSegment, 'a segment', ''))
             }
             { /* showLine ?
             'une droite' : showSemiLine ? 'une demi-droite' : showSegment ? 'un segment' : '' */}
@@ -521,7 +521,7 @@ export class Visualizer extends Component {
                 color="success"
                 onClick={this.checkResults}
               >
-                {t('Verifier')}
+                {t('Check')}
               </Button>
             </span>
             <span>
@@ -532,7 +532,7 @@ export class Visualizer extends Component {
                 color="danger"
                 onClick={this.reset}
               >
-                {t('Reprendre')}
+                {t('Restart')}
               </Button>
             </span>
           </div>

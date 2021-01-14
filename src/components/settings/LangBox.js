@@ -16,7 +16,7 @@ const LangBox = ({
       </Col>
       <Col xs={8}>
         <Select
-          defaultValue={options[0]}
+          defaultValue={options[1]}
           options={options}
           onChange={handleChangeLanguage}
           className="select-lang"

@@ -6,6 +6,7 @@ import Main from '../layout/main/Main';
 import SideMenu from '../layout/sidemenu/SideMenu';
 import Styles from '../layout/sidemenu/Styles';
 import { AppState } from '../config/AppState';
+import Refresher from '../components/visualizer/refresher/Refresher';
 
 const styles = Styles;
 
@@ -19,6 +20,7 @@ class MainView extends Component {
       <div className={classes.root}>
         <Main />
         <SideMenu />
+        <Refresher />
       </div>
     );
   }
