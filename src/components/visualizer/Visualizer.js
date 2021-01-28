@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import {
-  Line, Stage, Layer, Circle,
+  Line, Stage, Layer, Circle, Arrow,
 } from 'react-konva';
 import { AppState } from '../../config/AppState';
 
@@ -30,6 +30,7 @@ const initialState = {
     a: null,
     b: null,
   },
+  segmentLinePoint: null,
 };
 
 export class Visualizer extends Component {
@@ -56,7 +57,7 @@ export class Visualizer extends Component {
         startPoint: null,
         endPoint: null,
       },
-      lineDrawingFinished: true,
+      lineDrawingFinished: false,
       drawedLineEquation: {
         a: null,
         b: null,
@@ -165,6 +166,11 @@ export class Visualizer extends Component {
     this.setState({ drawedLineEquation: { a, b } });
   };
 
+  /**
+   *
+   * @param {Array} pointCoordinates
+   * @returns {Boolean} True or False whether the point is on the line or not
+   */
   isPointOnLine = (pointCoordinates) => {
     // y = ax + b
     const { drawedLineEquation } = this.state;
@@ -223,6 +229,7 @@ export class Visualizer extends Component {
           endPoint[1] + startPoint[1],
         ];
         this.getLineEquation(startPoint, newEndPoint);
+        this.linePoint();
       } else {
         this.setState({
           lineDrawingFinished: false,
@@ -486,6 +493,31 @@ export class Visualizer extends Component {
     this.setState({ ...initialState });
   }
 
+  linePoint = () => {
+    const { drawedLinePoints: { startPoint, endPoint } } = this.state;
+    const ptStart = { x: 0, y: 0 };
+    const ptEnd = { x: endPoint[0], y: endPoint[1] };
+
+    const sz = {
+      width: Math.abs(ptEnd.x - ptStart.x),
+      height: Math.abs(ptEnd.y - ptStart.y),
+    };
+
+    const adj = {
+      width: sz.width * 0.2,
+      height: sz.height * 0.2,
+    };
+
+    // Compute new position of arrow.
+    const drawX = (startPoint[0] > startPoint[0] + endPoint[0])
+      ? (startPoint[0] + adj.width) : (startPoint[0] - adj.width);
+
+    const drawY = (startPoint[1] > endPoint[1])
+      ? startPoint[1] + adj.height : startPoint[1] - adj.height;
+
+    this.setState({ segmentLinePoint: [drawX, drawY] });
+  }
+
   render() {
     const {
       showLine, showSegment, showSemiLine, themeColor, t,
@@ -496,12 +528,15 @@ export class Visualizer extends Component {
       circle0Coordinates,
       circleCoordinates,
       circle3Coordinates,
+      lineDrawingFinished,
       drawedLinePoints: { startPoint, endPoint },
+      segmentLinePoint,
     } = this.state;
     const scale = Math.min(
       window.innerWidth / CANVAS_VIRTUAL_WIDTH,
       window.innerHeight / CANVAS_VIRTUAL_HEIGHT,
     );
+    // console.log(segmentLinePoint);
     return (
       <div className="visualizer-container">
         <div>
@@ -511,8 +546,6 @@ export class Visualizer extends Component {
              || t(traceCondition(showSemiLine, 'a semi-line', ''))
              || t(traceCondition(showSegment, 'a segment', ''))
             }
-            { /* showLine ?
-            'une droite' : showSemiLine ? 'une demi-droite' : showSegment ? 'un segment' : '' */}
             <span>
               <Button
                 className="ml-2"
@@ -560,7 +593,21 @@ export class Visualizer extends Component {
                 themeColor={themeColor}
                 t={t}
               />
-              {/* !!!!!!!!!!!!!!!!!!!! HERE WILL BE PLACED THE LINES !!!!!!!!!!!!!!!!!!! */}
+
+              {/* !!!!!!!! TRACE A LINE ALONG WITH THE LINE SEGMENT  !!!!!!!! */}
+              {segmentLinePoint && showSegment && startPoint && endPoint && lineDrawingFinished && (
+              <Arrow
+                pointerAtBeginning
+                scaleX={1.4}
+                scaleY={1.4}
+                stroke="rgb(0, 61, 55)"
+                x={segmentLinePoint[0]}
+                y={segmentLinePoint[1]}
+                points={[0, 0, ...endPoint]}
+              />
+              )}
+              {/* !!!!!!!! TRACE A LINE ALONG WITH THE LINE SEGMENT !!!!!!!! */}
+
               {startPoint && (
                 <>
                   <Circle
@@ -569,12 +616,23 @@ export class Visualizer extends Component {
                     y={startPoint[1]}
                     radius={0} // This is a hack, to set the endPoint position x, y
                   />
-                  <Line
-                    stroke="rgb(0, 150, 136)"
-                    x={startPoint[0]}
-                    y={startPoint[1]}
-                    points={[0, 0, ...endPoint]}
-                  />
+                  {showSegment ? (
+                    <Line
+                      pointerAtBeginning={showLine}
+                      stroke="rgb(0, 150, 136)"
+                      x={startPoint[0]}
+                      y={startPoint[1]}
+                      points={[0, 0, ...endPoint]}
+                    />
+                  ) : (
+                    <Arrow
+                      pointerAtBeginning={showLine}
+                      stroke="rgb(0, 150, 136)"
+                      x={startPoint[0]}
+                      y={startPoint[1]}
+                      points={[0, 0, ...endPoint]}
+                    />
+                  )}
                 </>
               )}
             </Layer>
