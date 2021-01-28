@@ -286,7 +286,7 @@ export class Visualizer extends Component {
   };
 
   checkResults = () => {
-    const { simulation } = this.props;
+    const { simulation, t } = this.props;
     const { showLine, showSemiLine, showSegment } = simulation;
     const {
       drawedLinePoints,
@@ -303,7 +303,7 @@ export class Visualizer extends Component {
       /* const shouldTrace = showLine ?
        'une droite' : showSemiLine ? 'une demi-droite' : showSegment ? 'un segment' : ''; */
       swal({
-        title: 'ERREUR!',
+        title: t("Error!"),
         text: `Veuillez tracer ${shouldTrace}!`,
         icon: 'error',
         button: 'Super!',
@@ -325,8 +325,8 @@ export class Visualizer extends Component {
       ) {
         // alert("FAUX: Ceci n'est pas une droite!");
         swal({
-          title: 'FAUX!',
-          text: "Ceci n'est pas une droite!",
+          title: t('Wrong!'),
+          text: t("This is not a line"),
           icon: 'error',
           button: 'Ok!',
         });
@@ -346,8 +346,8 @@ export class Visualizer extends Component {
       ) {
         // alert("FAUX: Ceci n'est pas une droite!");
         swal({
-          title: 'FAUX!',
-          text: "Ceci n'est pas une droite!",
+          title: t('Wrong!'),
+          text: t("This is not a line"),
           icon: 'error',
           button: 'Ok!',
         });
@@ -360,7 +360,7 @@ export class Visualizer extends Component {
         && !this.isPointOnLine(circle3Coordinates)
       ) {
         // alert("Veuillez utilisez les points prevues sur le plan!");
-        swal('Erreur!', 'Veuillez utilisez les points prevues sur le plan!', 'error');
+        swal(t("Error!"), t("Please use the points provided on the map!"), 'error');
         return;
       }
 
@@ -374,14 +374,14 @@ export class Visualizer extends Component {
       ) {
         // alert("BRAVO: Vous venez de tracer une droite!");
         swal({
-          title: 'BRAVO!',
-          text: 'Vous venez de tracer une droite!',
+          title: t("Well done!"),
+          text: t('You have just drawn a line!'),
           icon: 'success',
           button: 'Super!',
         });
       } else {
         // alert("Veuillez utiliser deux points du plan!");
-        swal('Erreur!', 'Veuillez utiliser deux points du plan!', 'error');
+        swal(t("Error!"), t('Please use two points on the map!'), 'error');
       }
     } else if (showSemiLine) {
       // Handling result check for semi-line
@@ -401,8 +401,8 @@ export class Visualizer extends Component {
       ) {
         // alert("FAUX: Ceci n'est pas une demi-droite!");
         swal({
-          title: 'FAUX!',
-          text: "Ceci n'est pas une demi-droite!",
+          title: t('Wrong!'),
+          text: t('This is not a semi-line!'),
           icon: 'error',
           button: 'Ok!',
         });
@@ -422,8 +422,8 @@ export class Visualizer extends Component {
       ) {
         // alert("BRAVO: Vous venez de tracer une demi-droite!");
         swal({
-          title: 'BRAVO!',
-          text: 'Vous venez de tracer une demi-droite!',
+          title: t("Well done!"),
+          text: t("You have just drawn a semi-line!"),
           icon: 'success',
           button: 'Super!',
         });
@@ -440,16 +440,16 @@ export class Visualizer extends Component {
       ) {
         // alert("BRAVO: Vous venez de tracer une demi-droite!");
         swal({
-          title: 'BRAVO!!',
-          text: 'Vous venez de tracer une demi-droite!',
+          title: "Well done!",
+          text: t("You have just drawn a semi-line!"),
           icon: 'success',
           button: 'Super!',
         });
       } else {
         // alert("FAUX: Ceci n'est pas une demi-droite!");
         swal({
-          title: 'FAUX!',
-          text: "Ceci n'est pas une demi-droite!",
+          title: t('Wrong!'),
+          text: t('This is not a semi-line!'),
           icon: 'error',
           button: 'Ok!',
         });
@@ -472,16 +472,16 @@ export class Visualizer extends Component {
       ) {
         // alert("BRAVO: Vous avez tracer un segment!");
         swal({
-          title: 'BRAVO!',
-          text: 'Vous venez de tracer un segment!',
+          title: "Well done!",
+          text: t('You have just drawn a segment!'),
           icon: 'success',
           button: 'Super!',
         });
       } else {
         // alert("FAUX: Ceci n'est pas un segment!");
         swal({
-          title: 'FAUX!',
-          text: "Ceci n'est pas un segment!",
+          title: t('Wrong!'),
+          text: t('This is not a segment!'),
           icon: 'error',
           button: 'Ok!',
         });

@@ -24,6 +24,17 @@
     "a line": "a line",
     "a semi-line": "a semi-line",
     "a segment": "a segment",
-    "Please draw ": "Please draw "
+    "Please draw ": "Please draw ",
+    "Wrong!": "Wrong!",
+    "This is not a line": "This is not a line",
+    "Error!": "Error!",
+    "Please use the points provided on the map!": "Please use the points provided on the map!",
+    "Well done!": "Well done!",
+    "You have just drawn a line!": "You have just drawn a line!",
+    "Please use two points on the map!": "Please use two points on the map!",
+    "This is not a semi-line!": "This is not a semi-line!",
+    "You have just drawn a semi-line!": "You have just drawn a semi-line!",
+    "You have just drawn a segment!": "You have just drawn a segment!",
+    "This is not a segment!": "This is not a segment!"
   }
 }

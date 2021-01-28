@@ -25,6 +25,17 @@
     "a line": "une droite",
     "a semi-line": "une demi-droite",
     "a segment": "un segment",
-    "Please draw ": "Veuillez tracer "
+    "Please draw ": "Veuillez tracer ",
+    "Wrong!": "FAUX!",
+    "This is not a line": "Ceci n'est pas une droite!",
+    "Error!": "Erreur !",
+    "Please use the points provided on the map!": "Veuillez utiliser les points prévus sur le plan!",
+    "Well done!": "Bravo",
+    "You have just drawn a line!": "Vous venez de tracer une droite!",
+    "Please use two points on the map!": "Veuillez utiliser deux points du plan!",
+    "This is not a semi-line!": "Ceci n'est pas une demi-droite!",
+    "You have just drawn a semi-line!": "Vous venez de tracer une demi-droite!",
+    "You have just drawn a segment!": "Vous venez de tracer un segment!",
+    "This is not a segment!": "Ceci n'est pas un segment!"
   }
 }
