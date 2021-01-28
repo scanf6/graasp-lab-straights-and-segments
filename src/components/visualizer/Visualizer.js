@@ -303,7 +303,7 @@ export class Visualizer extends Component {
       /* const shouldTrace = showLine ?
        'une droite' : showSemiLine ? 'une demi-droite' : showSegment ? 'un segment' : ''; */
       swal({
-        title: t("Error!"),
+        title: t('Error!'),
         text: `Veuillez tracer ${shouldTrace}!`,
         icon: 'error',
         button: 'Super!',
@@ -326,7 +326,7 @@ export class Visualizer extends Component {
         // alert("FAUX: Ceci n'est pas une droite!");
         swal({
           title: t('Wrong!'),
-          text: t("This is not a line"),
+          text: t('This is not a line'),
           icon: 'error',
           button: 'Ok!',
         });
@@ -347,7 +347,7 @@ export class Visualizer extends Component {
         // alert("FAUX: Ceci n'est pas une droite!");
         swal({
           title: t('Wrong!'),
-          text: t("This is not a line"),
+          text: t('This is not a line'),
           icon: 'error',
           button: 'Ok!',
         });
@@ -360,7 +360,7 @@ export class Visualizer extends Component {
         && !this.isPointOnLine(circle3Coordinates)
       ) {
         // alert("Veuillez utilisez les points prevues sur le plan!");
-        swal(t("Error!"), t("Please use the points provided on the map!"), 'error');
+        swal(t('Error!'), t('Please use the points provided on the map!'), 'error');
         return;
       }
 
@@ -374,14 +374,14 @@ export class Visualizer extends Component {
       ) {
         // alert("BRAVO: Vous venez de tracer une droite!");
         swal({
-          title: t("Well done!"),
+          title: t('Well done!'),
           text: t('You have just drawn a line!'),
           icon: 'success',
           button: 'Super!',
         });
       } else {
         // alert("Veuillez utiliser deux points du plan!");
-        swal(t("Error!"), t('Please use two points on the map!'), 'error');
+        swal(t('Error!'), t('Please use two points on the map!'), 'error');
       }
     } else if (showSemiLine) {
       // Handling result check for semi-line
@@ -422,8 +422,8 @@ export class Visualizer extends Component {
       ) {
         // alert("BRAVO: Vous venez de tracer une demi-droite!");
         swal({
-          title: t("Well done!"),
-          text: t("You have just drawn a semi-line!"),
+          title: t('Well done!'),
+          text: t('You have just drawn a semi-line!'),
           icon: 'success',
           button: 'Super!',
         });
@@ -440,8 +440,8 @@ export class Visualizer extends Component {
       ) {
         // alert("BRAVO: Vous venez de tracer une demi-droite!");
         swal({
-          title: "Well done!",
-          text: t("You have just drawn a semi-line!"),
+          title: 'Well done!',
+          text: t('You have just drawn a semi-line!'),
           icon: 'success',
           button: 'Super!',
         });
@@ -472,7 +472,7 @@ export class Visualizer extends Component {
       ) {
         // alert("BRAVO: Vous avez tracer un segment!");
         swal({
-          title: "Well done!",
+          title: 'Well done!',
           text: t('You have just drawn a segment!'),
           icon: 'success',
           button: 'Super!',
