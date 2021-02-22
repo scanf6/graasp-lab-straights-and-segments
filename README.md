@@ -1,6 +1,6 @@
-# Graasp Lab Straight and Segments
+# Graasp Lab Lines and Segments
 
-This lab allows the learner to be able to visualize and draw straights, semi-straights and segments.
+This lab allows the learner to be able to visualize and draw lines, semi-lines and segments.
 
 This Lab was created using [Graasp App Starter React](https://github.com/react-epfl/graasp-app-starter-react)
 
